@@ -1,0 +1,189 @@
+@charset "utf-8";
+
+/*==========================================================================================*/ 
+/* 모바일에서 글자크기 커지는현상 제거 */
+/*==========================================================================================*/ 
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/*==========================================================================================*/ 
+/* 전체 감싸는 영역*/  
+/* #wap,#wrap:전체감싸는div넓이750px, #wrapper:전체감싸는 div넓이100% */
+/*==========================================================================================*/ 
+
+/*전체 감싸는 영역을 넓이750px로 지정*/ 
+#wap{width:750px; margin:0; padding:10px 0 0 10px;}
+#wrap{width:750px; margin:0; padding:10px 0 0 10px;}
+/*전체 감싸는 영역을 넓이100%로 지정*/
+#wrapper{min-width:750px;margin:0;padding:10px 10px 0 10px;}
+/*출력물쪽 전체영역*/
+#wap_print{width:750px; margin:0; padding:0 0 0 10px;}
+#wrap_print{width:750px; margin:0; padding:0 0 0 10px;}
+/*팝업 전체영역*/
+#wap_pop{margin:0; padding:10px 10px 0 10px;}
+#wrap_pop{margin:0; padding:10px 10px 0 10px;}
+
+/*컨텐츠영역*/
+#wap #contents,
+#wap_print #contents,
+#wap_pop #contents,
+#wrap #contents,
+#wrap_print #contents,
+#wrap_pop #contents{margin:0;}
+/*출력물 ie8에서 가운데정렬 되게*/
+#contents{width:100%; margin:0 auto; padding:0; clear:both;}
+/*컨테이너*/
+.container {*zoom:1;}/* IE5.5~7 브라우저 대응 Hack */
+.container:after {content:""; clear:both; display:block;} /* 표준계열 브라우저에 대응하는 float 해제용 가상 엘리먼트의 생성 */ 
+
+/*하단 고정되는 영역*/
+.fixed-bottom {position:fixed; bottom:45px; width:750px; background:#fff}
+/*상단 고정되는 영역 (ex.거래처검색팝업창에서 상단고정)*/
+.fixed-top {position:fixed; width:100%; top:0; left:0; background:#fff;}
+/*상단 고정되는 영역에서 양쪽패딩설정 */
+.fixed-top > .layer-position {padding:0px 10px}
+
+/*==========================================================================================*/ 
+/*상단영역 - 옵션,검색,버튼영역*/ 
+/*==========================================================================================*/ 
+
+/*상단타이틀 옵션버튼,검색버튼 이미지*/
+.btn-setting, .btn-search, .btn-print-search, .btn-pop-search {display:inline-block;  float:left; width:34px; height:24px; cursor:pointer; background:url('/ECMain/ECount.Common/Images/btn_title_right.gif') no-repeat;}
+/*상단타이틀 옵션버튼 이미지 위치지정*/
+.btn-setting {background-position:0 0}
+.btn-setting:hover {background-position:-34px 0}
+.btn-setting-on {background-position:-34px 0}
+
+/*상단타이틀 검색창 닫기*/
+.btn-search-close {display:inline-block; position:absolute; top:10px; right:-11px; width:33px; height:24px; cursor:pointer;background:url('/ECMain/ECount.Common/Images/btn_search_close.gif?2015070201') left top no-repeat;}
+/*상단타이틀 버튼영역 상단고정,여러줄*/
+#wrap .dual-btn-fixed {position:fixed; top:6px; z-index:2; width:750px}
+#wrapper .dual-btn-fixed,
+.dual-btn-fixed {position:fixed; top:6px; z-index:2; width:100%}
+/*팝업 상단타이틀 버튼영역 상단고정,여러줄*/
+#wrap_pop .dual-btn-fixed {position:fixed; top:6px; left:0; z-index:2; width:100%}
+.dual-btn-area {overflow:hidden; z-index:0; padding:4px 5px; border-bottom:1px dotted #c3c3c3; background:#fff}
+/*상단타이틀 출력물쪽 오른쪽 버튼영역*/
+#wrap .p-print-btn {padding-right:45px}
+#wrapper .p-print-btn {padding-right:55px}
+
+/*==========================================================================================*/ 
+/*버튼영역,버튼종류별 분류*/
+/*색상별 작은버튼, 색상별 큰버튼, 색상별 a링크,텍스트라벨*/ 
+/*==========================================================================================*/ 
+input{font-family:Dotum, Arial, Sans-serif;}
+/*작은버튼 영역*/
+div.sBTNlayM{float:left; width:100%; margin:0; padding:0;}
+div.sBTNlayM Ul{margin:0; padding:0;}
+div.sBTNlayM li{float:left; height:21px; margin:0; padding:0 4px 0 0; }
+div.sBTNlayM li.line_rate{float:right; margin:0; padding:0; font-size:12px;}
+
+.btn_blueS,
+.btn_redS,
+.btn_greenS,
+.btn_grayS,
+.btn_grayS_none,
+.btn_violetS,
+.btn_yellowS,
+.btn_whiteS,
+.btn_searchS,
+.btn_searchN {margin:0; padding:2px 3px 0 3px; height:18px;  border:1px solid #bbb; font-size:12px; line-height:80%; text-align:center; overflow: visible; cursor:pointer; color: #000; background: #f1f1f1;border-radius:2px;-webkit-appearance:none}
+.btn_grayS_none{color:#ccc}
+
+.btn_yellowS{background:#ff8f32;border-color:#ff8118;color:#fff}
+
+/*기본 버튼*/
+.btn,
+.btn input,
+.btn button{display:inline-block; position:relative; height:23px; margin:0; border:0; font-size:12px; line-height:23px; text-decoration:none !important; white-space:nowrap;outline:none;-webkit-appearance:none}
+.btn{padding:0;background-position:left top;vertical-align:middle;}
+.btn input,
+.btn button{left:2px;overflow:visible; padding:0 10px 0 6px; *vertical-align:top; cursor:pointer; background-position:right top;-webkit-appearance:none}
+
+/*기본 버튼 - 회색*/
+.btn.gray,
+.btn.gray input,
+.btn.gray button{background:#f5f5f5; color:#333;height:21px; line-height:21px; border-radius:3px}
+.btn.gray{border:1px solid #bbb}
+.btn.gray input,
+.btn.gray button{border-right:1px solid #bbb}
+.btn.gray:hover,
+.btn.gray input:hover,
+.btn.gray button:hover{background:#dcdcdc; border-color:#9c9c9c}
+
+
+
+/*==========================================================================================*/ 
+/*기타컨텐츠*/ 
+/*==========================================================================================*/ 
+
+/*출력물 도움말 오른쪽으로*/
+.btn_help_R{float:right; margin:8px 0 0 5px; padding:0 0 1px 5px;}
+
+/*페이지*/
+.pagerRight{float:right; margin:0; padding:0; font-size:11px; line-height:16px;}
+.pagerRight img{margin:0 0 2px 0; vertical-align:middle;}
+
+/*달력_월*/
+.daily_month{font-family:Dotum, Arial, Sans-serif; font-size:24px; font-weight:bold; padding:2px 0 0 200px; margin:0;}
+
+/*공통스타일*/
+.p_r45px {padding-right:45px}
+.tit-display-none {display:none}
+.top-zero {top:0 !important}
+
+.p_txt{margin:0; padding:0; font-size:12px; line-height:14px;}
+.font_s{font-size:11px;}
+
+ul.list_pad{padding-left:18px;}/* 출력물 li 앞에 쩜(ㆍ) 나오게 */
+ol.list_pad{padding-left:25px;}/* 출력물 li 앞에 숫자 나오게 */
+
+/*float*/
+.float_left{float:left !important; margin:0; padding:0; font-size:12px;}/*line-height:14px;*/
+.float_right{float:right !important; margin:0; padding:0; font-size:12px;}/*line-height:14px;*/
+.align_right{text-align:right}
+
+/*position값*/
+.p-absolute {position:absolute}
+.p-relative {position:relative}
+
+/*양식지 프린트*/
+#rpt_contents_new {position:relative; padding:0; text-align:left; width:650px; height:1px}
+/*#rpt_contents_new > .p-absolute:after {content:''; height:2px; display:block; clear:both;}*/
+
+/* 높이 띄위기*/
+#rpt_contents_new .H_0px{margin:0; clear:both;}
+#rpt_contents_new .H_2px{margin:2px 0 0 0; clear:both;}
+#rpt_contents_new .H_5px{margin:5px 0 0 0; clear:both;}
+#rpt_contents_new .H_10px{margin:10px 0 0 0; clear:both;}
+#rpt_contents_new .H_15px{margin:15px 0 0 0; clear:both;}
+#rpt_contents_new .H_20px{margin:20px 0 0 0; clear:both;}
+#rpt_contents_new .H_35px{margin:35px 0 0 0; clear:both;}
+#rpt_contents_new .H_40px{margin:40px 0 0 0; clear:both;}
+#rpt_contents_new .H_50px{margin:50px 0 0 0; clear:both;}
+#rpt_contents_new .H_60px{margin:60px 0 0 0; clear:both;}
+#rpt_contents_new .H_70px{margin:70px 0 0 0; clear:both;}
+
+.rpt-line {position:absolute; width:100%; height:1px; /*border-top:1px dashed #999*/background-image:url("/assets/images/print/dotted-h.gif?2017081601");-webkit-print-color-adjust:exact;}
+
+/*양식지 프린트쪽 페이징*/
+.paginationstyle {margin-top:5px}
+.paginationstyle a {display:inline-block; height:15px; margin-right:5px; background:url('/assets/images/print/btn-print-paging.png') left top no-repeat; vertical-align:middle}
+.paginationstyle a[rel="first"] {width:19px; background-position:0 0}
+.paginationstyle a[rel="previous"] {width:15px; background-position:-19px 0}
+.paginationstyle a[rel="next"] {width:15px; background-position:-34px 0}
+.paginationstyle a[rel="last"] {width:19px; background-position:-49px 0}
+
+.paginationstyle a[rel="first"]:hover {width:19px; background-position:0 -15px}
+.paginationstyle a[rel="previous"]:hover {width:15px; background-position:-19px -15px}
+.paginationstyle a[rel="next"]:hover {width:15px; background-position:-34px -15px}
+.paginationstyle a[rel="last"]:hover {width:19px; background-position:-49px -15px}
+
+.paginationstyle a.disabled, .paginationstyle a.disabled:hover {opacity:0.5; filter:alpha(opacity=50); cursor:default}
+
+.paginateinfo {margin:0 0 0 10px; font-size:12px; vertical-align:middle}
+.paginateinfo:before {content:"["}
+.paginateinfo:after {content:"]"}
+

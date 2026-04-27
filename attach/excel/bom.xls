@@ -1,0 +1,11 @@
+
+	<table border ='1'>
+		<tr>
+			<td><span style='color:red'>부모제품</span></td>
+			<td><span style='color:red'>품목코드</span></td>
+			<td><span style='color:red'>품목명</span></td>
+			<td><span style='color:red'>규격</span></td>
+			<td><span style='color:red'>단위</span></td>
+			<td><span style='color:red'>소요량</span></td>
+		</tr>
+<tr><td>8</td><td>S-001</td><td>키보드</td><td>2벌식</td><td>ea</td><td>1</td></tr><tr><td>8</td><td>C-005</td><td>전원케이블</td><td>2m</td><td>ea</td><td>1</td></tr><tr><td>8</td><td>S-002</td><td>모니터</td><td>27inc</td><td>ea</td><td>1</td></tr><tr><td>6</td><td>C-001</td><td>PCB</td><td>100*100</td><td>ea</td><td>1</td></tr><tr><td>6</td><td>C-004</td><td>키알</td><td>4*4</td><td>ea</td><td>1</td></tr><tr><td>7</td><td>C-003</td><td>액정</td><td>27inc</td><td>ea</td><td>1</td></tr><tr><td>7</td><td>C-002</td><td>PCB</td><td>200*200</td><td>ea</td><td>1</td></tr><tr><td>7</td><td>C-005</td><td>전원케이블</td><td>2m</td><td>ea</td><td>1</td></tr></table>

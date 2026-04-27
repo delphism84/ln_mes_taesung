@@ -1,0 +1,211 @@
+<?
+/*
+계정코드 관련 Ajax 처리 페이지
+*/
+
+session_start();
+
+require_once('../connection.php');
+require_once('../library/json.php');
+require_once('../library/function.php');
+
+$json = new Services_JSON();
+
+extract($_POST);
+extract($_GET);
+//$mode = "get_account_code";
+switch($mode) {
+	// 계정코드 리스트 가져오기
+	case "getPayRollBook" :
+		$where = " where 1=1";
+		/*
+		if($account_gb == "all") {
+			$where .= "";
+		} else if($account_gb == "purchase") {
+			$where .= " and account_gb='purchase'";
+		} else if($account_gb == "sales") {
+			$where .= " and account_gb='sales'";
+		} else {
+			$where .= "";
+		}
+		*/
+
+		$where .= "";
+		if($txt != "") {
+			if($search_choice == "account_nm") {
+				$where .= " and account_nm like '%".$txt."%'";
+			} else if($search_choice == "account_cd") {
+				$where .= " and account_cd like '%".$txt."%'";
+			}
+		}
+		
+		$query = "select * from erp_pay_member_item".$where;
+		
+		$total_num = @mysql_num_rows(@mysql_query($query));
+
+		$page = (is_numeric($page)) ? $page : 1; 
+		$rpp = 10;  # record/page 
+		$adjacents = $adjacents; # 양 옆에 표시될 페이지 수  
+		$query = "select count(*) from erp_pay_check".$where;
+		$query = mysql_query($query); 
+		list($total) = mysql_fetch_row($query); 
+		$query = "select * from erp_pay_member_item".$where." order by uid  limit ".($page-1)*$rpp.", ".$rpp;
+		//echo $query;
+		$result = mysql_query($query);
+
+		$i = 0;
+		$ct = 1;
+
+		while($t = @mysql_fetch_object($result)) {
+			$no = $rpp * ($page-1) + $ct;
+			$re[$i]['total_num'] = $total_num;
+			$re[$i]['no'] = $no;
+			$re[$i]['uid'] = $t->uid;
+			$re[$i]['pay_check_dt'] = $t->pay_check_dt;
+			$re[$i]['pay_check_ca'] = $t->pay_check_ca;
+			
+			$re[$i]['emp_cd'] = $t->emp_cd;
+			$re[$i]['emp_nm'] = $t->emp_nm;
+			if ($t->pay_gubun=="11"){
+				$pay_gubun ="급여";
+			}else if ($t->pay_gubun=="31"){
+				$pay_gubun ="급(상)여";
+			}else if ($t->pay_gubun=="21"){
+				$pay_gubun ="상여";
+			}else{
+				$pay_gubun ="급여";
+			}
+			$re[$i]['pay_gubun'] = $pay_gubun;
+						
+			$re[$i]['taxcalc'] = $t->taxcalc;
+			/*
+			switch($t->aci_type){ 
+			case "AS" :
+				$aci_type ="자산";
+			break;
+			case "DE" :
+				$aci_type ="부채";
+			break;
+			case "CP" :
+				$aci_type ="자본";
+			break;
+			case "PL" :
+				$aci_type ="손익";
+			break;
+			case "CA" :
+				$aci_type ="원가1";
+			break;
+			case "CB" :
+				$aci_type ="원가2";
+			break;
+			case "CC" :
+				$aci_type ="원가3";
+			break;
+			}
+			$re[$i]['aci_type'] = $aci_type;
+			*/
+
+			$re[$i]['lastday'] = $t->lastday;
+			$re[$i]['txtPayAmt1'] = $t->txtPayAmt1;
+			$re[$i]['hidAdCd1'] = $t->hidAdCd1;
+			$re[$i]['hidAdGubun1'] = $t->hidAdGubun1;
+			$re[$i]['txtMemo1'] = $t->txtMemo1;
+			$re[$i]['txtPayAmt2'] = $t->txtPayAmt2;
+			$re[$i]['hidAdCd2'] = $t->hidAdCd2;
+			$re[$i]['hidAdGubun2'] = $t->hidAdGubun2;
+			
+			$querys = "select department_nm from erp_employee where emp_cd='".$t->emp_cd."'";
+			//echo $querys;
+			$querys = mysql_query($querys); 
+			$rows   = mysql_fetch_array($querys);
+			$department_nm =$rows['department_nm'];
+			$re[$i]['department_nm'] = $department_nm;
+			/*
+			switch($t->valuation_account_gb){ 
+			case "X" :
+				$valuation_account_gb ="해당없음";
+			break;
+			case "D" :
+				$valuation_account_gb ="평가계정대상";
+			break;
+			case "G" :
+				$valuation_account_gb ="평가계정";
+			break;
+			default;
+				$valuation_account_gb ="해당없음";
+			break;
+			}
+			$re[$i]['valuation_account_gb'] = $valuation_account_gb;
+			*/
+			
+			$re[$i]['use_yn'] = $t->use_yn;
+			if ($t->use_yn=="N"){
+				$use_yn ="가능";
+			}else{
+				$use_yn ="Y";
+			}
+			$re[$i]['txtMemo2'] = $txtMemo2;
+			$re[$i]['txtCommentUp'] = $t->txtCommentUp;
+			$re[$i]['txtCommentDown'] = $t->txtCommentDown;
+			
+			$re[$i]['writer']= $t->writer;
+			$re[$i]['regdate'] = substr($t->regdate,0,10);
+
+			
+			$txtPayAmt1 = $t->txtPayAmt1;
+			$txtPayAmt1_arr	= explode('|',str_replace(",","",$txtPayAmt1));
+			//implode(", ", $a) . "<br />\n";
+			$txtPayAmt1_arr_sum = array_sum($txtPayAmt1_arr);
+			$re[$i]['txtPayAmt1_arr_sum'] = number_format($txtPayAmt1_arr_sum);
+
+			$txtPayAmt2 = $t->txtPayAmt2;
+			$txtPayAmt2_arr	= explode('|',str_replace(",","",$txtPayAmt2));
+			//implode(", ", $a) . "<br />\n";
+			$txtPayAmt2_arr_sum = array_sum($txtPayAmt2_arr);
+			$re[$i]['txtPayAmt2_arr_sum'] = number_format($txtPayAmt2_arr_sum);
+
+			$re[$i]['txtPayAmt_sum_int'] =  $txtPayAmt1_arr_sum - $txtPayAmt2_arr_sum;
+			$re[$i]['txtPayAmt_sum'] =  number_format($txtPayAmt1_arr_sum - $txtPayAmt2_arr_sum);
+
+			$txtPayAmt1_hap = $txtPayAmt1_hap + $txtPayAmt1_arr_sum;
+			
+
+			$i++;
+			$ct++;
+			//echo $re;
+		}
+		
+		$re[0]['txtPayAmt1_hap'] = number_format($txtPayAmt1_hap);
+		echo $json->encode($re);
+	break;
+	
+
+
+	// 선택항목 삭제 => 다른 DB랑 연계되어 있으면 삭제 처리 하지 말아야 함...
+	case "deleteSelectAccount" :
+		$array_uid = explode(",",$uids);
+		for($i = 0 ; $i <= sizeof($array_uid) ; $i++) {
+			$query = "delete from erp_account_code where uid=".$array_uid[$i];
+			mysql_query($query);
+		}
+
+		echo "success";
+	break;
+
+		// 선택항목 삭제 => 다른 DB랑 연계되어 있으면 삭제 처리 하지 말아야 함...
+	case "confirmAccountCode" :
+		$query = "select count(*) as cnt from erp_account_code where aci_cd=".$aci_cd;
+		//echo $query;
+		$query = mysql_query($query); 
+		$row = mysql_fetch_array($query);
+		$cd_yn=$row['cnt'];
+		//echo $cd_yn;
+		if ($cd_yn == "0"){
+			$result = "success";
+		}else{
+			$result = "false";
+		}
+		echo $json->encode($result);
+	break;
+}
+?>

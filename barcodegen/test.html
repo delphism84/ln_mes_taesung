@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <title> new document </title>
+  <meta name="generator" content="editplus" />
+  <meta name="author" content="" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <script type="text/javascript" src="/weberp/js/jquery.js" ></script>
+  <script type="text/javascript">
+	function onKeyDownBarcode(Obj){
+		if(window.event.keyCode == 13){
+			var param = "barcode="+Obj.value;
+			$.ajax({ 
+				type: 'post'
+				, url: './ajax_getbarcode.php'
+				, data: param
+				, datatype: 'json'
+				, success: function(data) {
+					var res =  eval('(' + data + ')');
+					var bar_id = Obj.getAttribute("id");
+					var bar_array = bar_id.split("_");
+					var bar_num = parseInt(bar_array[1]);
+					var product_id = "product_"+bar_num;
+					var bar_next_id = "barcode_"+(bar_num+1);
+					if(res.rst == 1){
+						$("#"+product_id).val(res.product);
+					}else{
+						var bar_confirm = confirm("등록되지 않은 품목입니다. 상품을 등록하시겠습니까?");
+						if(bar_confirm){
+							window.open("/weberp/base/base02/base02_regist.php?submode=barcode&bacode="+Obj.value+"&inputname="+product_id,"window","width=1000,height=500,resizable=yes,scrollbars=yes");
+						}else{
+							$("#"+product_id).val("등록되지 않은 품목입니다.");
+							$("#"+product_id).css("color","#ff0000");
+						}
+					}
+					document.getElementById(bar_next_id).focus();
+				}
+				, error: function(data, status, err) {
+					alert("바코드 조회 에러!");
+				}
+				, complete: function() {}
+			});
+		}
+	}
+
+	function onFocusBarcode(Obj){
+		var bar_id = Obj.getAttribute("id");
+		var bar_array = bar_id.split("_");
+		var bar_num = parseInt(bar_array[1])+1;
+		Obj.setAttribute("onfocus","");
+		$("#barcodeTable").append("<tr><td>바코드</td><td><input type=\"text\" id=\"barcode_"+bar_num+"\" name=\"barcode_"+bar_num+"\" onkeydown=\"onKeyDownBarcode(this)\" onfocus=\"onFocusBarcode(this)\" tabindex='"+bar_num+"'></td><td>품목명</td><td><input type=\"text\" id=\"product_"+bar_num+"\" name=\"product_"+bar_num+"\"></td><td>수량</td><td><input type=\"text\" id=\"num_"+bar_num+"\" name=\"num_"+bar_num+"\"></td></tr>");
+	}
+  </script>
+ </head>
+ <body>
+ <form name="barcodeForm">
+  <table id="barcodeTable">
+  <tr>
+	<td>바코드</td>
+	<td><input type="text" id="barcode_1" name="barcode_1" onkeydown="onKeyDownBarcode(this)" tabindex='1' ></td>
+	<td>품목명</td>
+	<td><input type="text" id="product_1" name="product_1"></td>
+	<td>수량</td>
+	<td><input type="text" id="num_1" name="num_1"></td>
+  </tr>
+  <tr>
+	<td>바코드</td>
+	<td><input type="text" id="barcode_2" name="barcode_2" onkeydown="onKeyDownBarcode(this)" tabindex='2'></td>
+	<td>품목명</td>
+	<td><input type="text" id="product_2" name="product_2"></td>
+	<td>수량</td>
+	<td><input type="text" id="num_2" name="num_2"></td>
+  </tr>
+  <tr>
+	<td>바코드</td>
+	<td><input type="text" id="barcode_3" name="barcode_3" onkeydown="onKeyDownBarcode(this)" tabindex='3'></td>
+	<td>품목명</td>
+	<td><input type="text" id="product_3" name="product_3"></td>
+	<td>수량</td>
+	<td><input type="text" id="num_3" name="num_3"></td>
+  </tr>
+  <tr>
+	<td>바코드</td>
+	<td><input type="text" id="barcode_4" name="barcode_4" onkeydown="onKeyDownBarcode(this)" tabindex='4'></td>
+	<td>품목명</td>
+	<td><input type="text" id="product_4" name="product_4"></td>
+	<td>수량</td>
+	<td><input type="text" id="num_4" name="num_4"></td>
+  </tr>
+  <tr>
+	<td>바코드</td>
+	<td><input type="text" id="barcode_5" name="barcode_5" onkeydown="onKeyDownBarcode(this)" tabindex='5'></td>
+	<td>품목명</td>
+	<td><input type="text" id="product_5" name="product_5"></td>
+	<td>수량</td>
+	<td><input type="text" id="num_5" name="num_5"></td>
+  </tr>
+  <tr>
+	<td>바코드</td>
+	<td><input type="text" id="barcode_6" name="barcode_6" onkeydown="onKeyDownBarcode(this)" onfocus="onFocusBarcode(this)" tabindex='6'></td>
+	<td>품목명</td>
+	<td><input type="text" id="product_6" name="product_6"></td>
+	<td>수량</td>
+	<td><input type="text" id="num_6" name="num_6"></td>
+  </tr>
+  </table>
+  </form>
+ </body>
+</html>

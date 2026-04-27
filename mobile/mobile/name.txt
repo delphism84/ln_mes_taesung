@@ -1,0 +1,107 @@
+
+∝ 肺弊牢 其捞瘤
+index.php
+
+∝皋牢 其捞瘤
+main.php
+
+∝ 扁霖沥焊包府
+frmItemClassify.php = 前格备盒 包府
+frmItemGroup.php = 前格弊缝 包府
+frmItemBuyer.php = 前格 概涝贸包府
+frmItemCost.php = 芭贰贸喊 前格窜啊包府
+frmItemProcess.php = 前格 力炼傍沥 包府
+frmItem.php = 前格 包府
+frmAccountClassify.php = 芭贰贸备盒 包府
+frmAccount.php = 芭贰贸 包府
+frmDepartment.php = 何辑包府
+frmPosition.php = 流困 包府
+frmEmployee.php = 荤盔 包府
+frmWarehouse.php = 芒绊包府
+frmProcess.php = 傍沥 包府
+frmMachine.php = 积魂汲厚 包府
+frmTeam.php = 积魂评 包府
+frmProject.php = 橇肺璃飘 包府
+frmRentcar.php = 侩瞒包府
+frmRentcarCost.php = 夸陛包府
+excel.php = 竣伎磊丰殿废
+
+∝ 荐林包府
+frmEstimate.php = 斑利包府
+frmObtainOrder.php = 荐林包府
+frmObtainOrderShipment.php = 免窍瘤矫包府
+frmAs.php = AS包府
+
+
+
+
+
+data-toggle="modal" data-target="#details_pop"
+吵扁老磊 荐林老磊
+<!-- 惑技焊扁 -->
+<div class="modal fade" id="details_pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="search_wrap_box box_after">
+			<div class="pop_head">
+				<h4>惑技焊扁</h4>
+			</div>
+			<div class="search_body">										
+				<table class="enrollment_table ">
+					<tr>
+						<th>
+							荐林内靛
+						</th>
+						<td>
+							20181026-04
+						</td>
+					</tr>																					
+					<tr>
+						<th>
+							芭贰贸
+						</th>
+						<td>
+							悼老抛农 [包府]
+						</td>
+					</tr>											
+					<tr>
+						<th>
+							惑瞒老
+						</th>
+						<td>
+							2018-11-02
+						</td>
+					</tr>	
+					<tr>
+						<th>
+							硅价瘤
+						</th>
+						<td>
+							合 没林矫 惑寸备 1鉴券肺 1202-2 (规辑悼)
+						</td>
+					</tr>	
+					<tr>
+						<th>
+							瘤矫磊
+						</th>
+						<td>
+							弥绊包府磊
+						</td>
+					</tr>	
+					<tr>
+						<th>
+							惑怕
+						</th>
+						<td>
+							免窍瘤矫
+						</td>
+					</tr>	
+				</table>
+			</div>									
+			<div class="floatright">										
+				<button class="close_btn" data-dismiss="modal">
+					<span>摧扁</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,24 @@
+html,body{height:100%;}
+.box1{width: 100%; height: 10%;background-color: #0082e8; position:relative;}
+.box1 b{float: right; color: #fff; margin-right: 30px; font-size: 1.5em; font-weight: normal;}
+.box1 input{float: right; margin-right: 30px; border: none; background-color: #a699e6; color: #fff; padding: 5px;}
+.box1 button{font-size: 3em; background-color: #0082e8; color: #fff; position:absolute; top:55%; left:5%; transform:translate(-50%,-50%); border:none}
+.glyphicon-user{color: #fff; float: right; font-size: 3em; margin-right: 30px;}
+.background-fff{background-color:#fff;}
+.padding-20px{padding:20px;}
+.margintop-20px{margin-top:20px;}
+.left-box{width: 69%; height: 100%;  float: left;}
+.right-box{width: 30%; height: 100%;  float: right;}
+.barcode{position:absolute; top:0; left:-120%; transition: all 0.3s; width:100%;}
+.keyin{position:absolute; top:0; right:-120%; transition: all 0.3s; width:100%;}
+.glyphicon-remove{color:#fff; padding:20px; float:left; font-size:30px}
+.slide-tit{color:#fff; padding:10px; float:right; font-size:30px; margin-top:5px;}
+.slide-box{height:70px; background-color:#0082e8;}
+.wrap_box{width:50%; height:500px; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);}
+.purch-box{width:49%; height:100%; }
+.purch-box:nth-child(1){float:left}
+.purch-box:nth-child(2){float:right;}
+.purch_tit{width:100%; position:relative; background-color:#4E8DF5; padding: 20px;}
+.purch_tit p{font-size:2em; color:#fff; text-align: center}
+.purch_btn{width:100%; height:80%; position:relative; background-color:#8FCEFF;}
+.purch_btn button{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border:none; padding:30px; font-size:2em; background-color:#555; color:#fff;}

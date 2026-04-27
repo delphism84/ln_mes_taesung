@@ -1,0 +1,1144 @@
+<?
+session_start();
+
+//if($_SESSION['login_id'] == "" || $_SESSION['process'] == "" || $_SESSION['machine'] == "") {
+//	session_destroy();
+//	header("Location: index.php");
+//}
+
+$week = array("일", "월", "화", "수", "목", "금", "토");
+$s = $week[date("w")];
+?>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로그인후 화면</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+</head>
+
+
+
+<style>
+html,body{
+	height:100%;
+}
+/*생산실적 등록*/
+.end_job{width:100%; height:100%; padding:0;background-color:#fff; position:absolute; top:0; right:-100%; overflow-y:scroll; transition:all 0.5s;}
+/*작업재개*/
+.resume_operation{width:100%; height:100%; padding:0;background-color:#fff; position:absolute; top:0; right:-100%; overflow-y:scroll; transition:all 0.5s;}
+/*투입재개*/
+.input_material{width:100%; height:100%; padding:0;background-color:#fff; position:absolute; top:0; right:-100%; overflow-y:scroll; transition:all 0.5s;}
+/*자재출고요청*/
+.materials{width:100%; height:100%; padding:0;background-color:#fff; position:absolute; top:0; right:-100%; overflow-y:scroll; transition:all 0.5s;}
+/*자재반납*/
+.materials_return{width:100%; height:100%; padding:0;background-color:#fff; position:absolute; top:0; right:-100%; overflow-y:scroll; transition:all 0.5s;}
+
+.log_out_btn_box{width:100%; padding:20px;}
+.log_out_btn_box01 span{font-size:2em; margin-right:20px; color:#fff;}
+.common_top_box01{height:8%; padding:4px;position:relative; background-color:#0082e8}
+
+.padding-20px{padding:20px;}
+.margintop-20px{margin-top:20px;}
+.title-style{float:right; color:#fff; padding-right:20px; font-size:50px; margin-top:7px;}
+.slide-close{padding-left:20px; color:#fff; font-size:55px;}
+.slide-top{background-color:#0082e8; height:8%; border:1px solid #0082e8;}
+.slide-content{height:92%; padding:20px;}
+#barcode{height:53px;}
+
+table {
+	font-size:15px;
+}
+
+.btn {
+	height: 50px;
+	font-size : 20px;
+}
+</style>
+
+<body style="overflow:hidden">
+<div><!--전체화면-->
+	<div>
+		<div>   
+			<div class="common_top_box01">
+				<div class="log_out_btn_box">					
+					<div class="log_out_btn_box01" >
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<span><?=$_SESSION['process_nm']?></span>
+						<span><?=$_SESSION['machine_nm']?></span>
+						<span><?=$_SESSION['login_nm']?></span>
+						<input type="button" class="btn btn-primary" value="로그아웃" onclick="location.href='logout.php'" />
+						<span>[<?=date("Y-m-d")?>] <?=$s?>요일</span>
+					</div>
+				</div>
+			</div>
+			<div class="padding-20px">				
+				<div>					
+					<input type="hidden" name="use" id="use" value="n" />
+					<input type="button" class="btn btn-lg btn-info" value="작업준비" onclick="workReady()" />
+					<input type="button" class="btn btn-lg btn-info" value="작업준비완료" onclick="workReadyEnd()" />
+					<input type="button" class="btn btn-lg btn-success" value="투입자재" onclick="initem()" />
+					<input type="button" class="start_job_btn btn-lg btn btn-danger" value="작업시작" onclick="startWork()" />
+					<input type="button" class="end_job_btn btn-lg btn btn-danger" value="작업종료" onclick="checkEndWork()" />
+					<input type="button" class="abort_work_btn btn btn-lg btn-warning" value="작업중단" onclick="stopWork()" />
+					<input type="button" class="resume_operation_btn btn btn-lg btn-warning" value="작업재개" onclick="restartWork()" />
+					<input type="button" class="btn btn-lg btn-success materials_btn" value="자재출고요청" onclick="demandItem()" />
+					<input type="button" class="btn btn-lg btn-inverse materials_return_btn" value="자재반납"  />
+					<input type="hidden" name="work_down_uid" id="work_down_uid" value="<?=$_SESSION['work_down_uid']?>" />
+
+				</div>				
+				<div >
+					<div class="margintop-20px">
+						<table id="tb" class="table table-bordered">
+							<thead>
+								<tr class="info">
+									<th>작업순서</th>
+									<th>작업지시서코드</th>
+									<th>작업상태</th>
+									<th>거래처명</th>
+									<!--<th class="column100 column5" data-column="column5">수주코드</th>-->
+									<!--<th class="column100 column5" data-column="column5">작업공정</th>-->
+									<th>작업품목코드</th>
+									<th>작업품목명</th>
+									<th>작업규격</th>
+									<th>작업지시수량</th>
+									<th>잔여생산수량</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>				
+			</div>
+		</div>
+
+		<!--생산실적등록 팝업시작-->
+		<div class="end_job">
+			<div class="slide-top">
+				<span class="end_job_close slide-close"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span>
+				<h1 class="title-style">생산실적 등록<h1>				
+			</div>
+			<div class="slide-content">
+				<div>					
+					<div>
+						<form name="endFrm" id="endFrm" >
+							<input type="hidden" name="mode" id="mode" value="sEndWork" />
+							<div>
+								<table class="table table-bordered">
+									<tr>
+										<th class="info col-xs-2">작업지시서 코드</th>
+										<td><input type="hidden" name="end_work_cd" id="end_work_cd" /><span name="s_work_cd" id="s_work_cd"></span></td>
+									</tr>
+									<tr>
+										<th class="info">품번</th>
+										<td><input type="hidden" name="end_item_cd" id="end_item_cd" /><span name="s_item_cd" id="s_item_cd"></span></td>
+									</tr>
+									<tr>
+										<th class="info">품명</th>
+										<td><input type="hidden" name="end_item_nm" id="end_item_nm" /><span name="s_item_nm" id="s_item_nm"></span></td>
+									</tr>
+									<tr>
+										<th class="info">규격</th>								
+										<td><input type="hidden" name="end_standard" id="end_standard" /><span name="s_standard" id="s_standard"></span></td>
+									</tr>
+									<tr>
+										<th class="info">생산지시수량</th>										
+										<td><input type="hidden" name="end_cnt" id="end_cnt" /><span name="s_cnt" id="s_cnt"></span></td>
+									</tr>
+									<tr>
+										<th class="info">생산수량</th>
+										<td><input type="number" class="form-control" name="end_make_cnt" id="end_make_cnt" /></td>
+									</tr>
+									<tr>
+										<th class="info">불량수량</th>
+										<td><input type="number" class="form-control" name="end_faulty_cnt" id="end_faulty_cnt"/></td>
+									</tr>
+									<tr>
+										<th class="info">불량사유</th>
+										<td>
+											<select name="end_faulty_reason" id="end_faulty_reason" class="form-control">
+												<option value='0'>== 선택 ==</option>											
+											</select>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+
+							<div><input type="button" class="btn btn-xs btn-success" value="실 투입자재 등록" onclick="getProcessWarehouseItemList()"></div>
+							<div>
+								<table class="table table-bordered" style="margin-top:5px" id="input_item_tb">
+									<thead>
+										<tr class="info">
+											<th>품번</th>
+											<th>품목명</th>
+											<th>규격</th>
+											<th>단위</th>
+											<th>재고수량</th>
+											<th>투입수량</th>
+											<th>Lot No</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div style="text-align:center">
+					<button class="btn btn-info" id="btnRegistProductCnt" >생산실적 등록</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!--end_job_data 슬라이드 팝업끝-->
+
+
+
+
+
+
+	<!-- 자재출고요청 슬라이드 팝업시작-->
+	<div class="materials" >
+		<div class="slide-top">
+			<span class="materials_close slide-close"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span>
+			<h1 class="title-style">자재출고요청<h1>				
+		</div>
+		<div class="padding-20px">
+			<div>			
+				<span class="btn btn-success" data-toggle="modal" data-target="#myModal01">출고요청목록</span>						
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>구분</th>
+							<th>품번</th>
+							<th>품명</th>
+							<th>규격</th>									
+							<th>단위</th>
+							<th>요청수량</th>
+							<th>잔여수량</th>
+							<th>요청공정</th>
+							<th>요청설비</th>
+							<th>요청팀</th>
+							<th>처리상태</th>
+							<th>요청일</th>
+						</tr>
+					</thead>
+					<tbody>							
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>						
+	<!--자재출고요청 슬라이드 팝업끝-->
+
+
+
+	<!-- 자재반납 슬라이드 팝업시작-->
+	<div class="materials_return">
+		<div class="slide-top">
+			<span class="materials_return_close slide-close"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span>
+			<h1 class="title-style">자재반납<h1>				
+		</div>
+		<div class="padding-20px">
+			<div>					
+				<div>
+					<span class="btn btn-success">출고요청목록</span>
+					<div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>구분</th>
+									<th>품번</th>
+									<th>품명</th>
+									<th>규격</th>
+									<th>단위</th>
+									<th>반납수량</th>
+									<th>잔여수량</th>
+									<th>요청공정</th>
+									<th>요청설비</th>
+									<th>요청팀</th>
+									<th>처리상태</th>
+									<th>요청일</th>
+								</tr>
+							</thead>
+							<tbody>							
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>				
+		</div>
+	</div>
+	<!--자재출고요청 슬라이드 팝업끝-->
+
+	<!-- 실투입자재 모달 -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">공정 투입자재 목록</h4>
+				</div>
+				<div class="modal-body">					
+					<div>
+						<table class="table table-bordered" id="process_warehouse_tb">
+							<thead>
+								<tr class="info">
+									<th>품번</th>
+									<th>품목명</th>
+									<th>규격</th>
+									<th>단위</th>									
+									<th>투입수량</th>
+									<th>Lot No</th>
+									<th>투입일</th>
+								</tr>
+							</thead>
+							<tbody>							
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div style="text-align:center; margin-bottom:20px">					
+					<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-lg btn-success">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--투입자재추가 모달팝업 끝-->
+
+
+	<!--자재출고요청 모달팝업 시작-->
+	<div class="modal fade" id="myModal01" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" >
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">자재출고요청</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>품번</th>
+									<th>품목명</th>
+									<th>규격</th>
+									<th>단위</th>									
+									<th>투입수량</th>
+									<th>Lot No</th>
+									<th>투입일</th>
+								</tr>
+							</thead>
+							<tbody>							
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+				<div>					
+					<button type="button" class="btn-lg btn-danger" data-dismiss="modal">닫기</button>
+					<button type="button" class="btn-lg btn-success">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--자재출고요청 모달팝업 끝-->
+
+	<!--작업재개 -->
+	<div class="resume_operation">
+		<div class="slide-top">			
+			<span class="resume_operation_close slide-close"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span>
+			<h1 class="title-style">작업재개<h1>	
+		</div>
+		<div>
+			<div>
+				<div class="padding-20px">					
+					<div>
+						<table class="table table-bordered">
+							<tr>
+								<th class="info col-xs-1">공정</th>
+								<td>
+									<input type="hidden" name="stop_process" id="stop_process" value="<?=$_SESSION['process']?>" /><?=$_SESSION['process_nm']?>
+								</td>
+							</tr>
+							<tr>
+								<th class="info">설비(팀)</th>
+								<td>
+									<input type="hidden" name="stop_machine" id="stop_machine" value="<?=$_SESSION['machine']?>" /><?=$_SESSION['machine_nm']?>
+								</td>
+							</tr>
+							<tr>
+								<th class="info">이상발생 분류</th>
+								<td>
+									<select name="abnormal_type" id="abnormal_type" class="form-control">
+										<option value="돌발발생">돌발발생</option>
+										<option value="일상 및 정기점검">일상 및 정기점검</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th class="info">비가동 유형</th>
+								<td>
+									<select name="down_type" id="down_type" class="form-control">
+										<option value="계획생산정지">계획생산정지</option>
+										<option value="휴식">휴식</option>
+										<option value="식사">식사</option>
+										<option value="설비보수">설비보수</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th class="info">이상내용</th>
+								<td>
+									<textarea name="abnormal_comment" id="abnormal_comment"  rows="5" class="form-control""></textarea>
+								</td>
+							</tr>
+							<tr>
+								<th class="info">조치내역</th>
+								<td>
+									<textarea name="action_comment" id="action_comment" rows="5" class="form-control"></textarea>
+								</td>
+							</tr>
+						</table>
+					</div>				
+					<div style="text-align:center">
+						<button class="btn btn-info" onclick="registRestartWork()">작업중단 사유 등록</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--resume_operation_data 슬라이드 팝업끝-->   
+
+	<!-- 투입자재 -->
+	<div class="input_material">
+		<div class="slide-top">
+			<span class="input_material_close slide-close"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span>
+			<h1 class="title-style">투입자재<h1>
+		</div>
+		<div class="padding-20px">  
+			<div>			
+				<input id="barcode" type="text" class="form-control input-lg"name="barcode" placeholder="바코드를 스캔하여주세요">				
+			</div>
+			<div class="margintop-20px">
+				<div>
+					<form id="inItemFrm">						
+						<input type="text" name="work_uid" id="work_uid" />
+						<input type="hidden" name="process" id="process" value="<?=$_SESSION['process']?>" />
+						<input type="hidden" name="machine" id="machine" value="<?=$_SESSION['machine']?>" />
+						<input type="hidden" name="mode" id="mode" value="sRegistInItem" />	
+						<input type="hidden" name="work_item_cd" id="work_item_cd" />
+						<input type="hidden" name="work_cnt" id="work_cnt" />						
+						<div>
+							<div>
+								<table class="table table-bordered" id="in_item_tb">
+									<thead>
+										<tr class="info">
+											<th>품번</th>
+											<th>품목명</th>
+											<th>규격</th>
+											<th>단위</th>
+											<th>투입수량</th>
+											<th>Lot No</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</form>
+				</div>			
+				<div style="text-align:center; margin-top:30px">
+					<button class="btn btn-info" id="btnRegistInItem">투입자재 등록</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--input_material 슬라이드 팝업끝-->
+ </div>
+
+
+<input type="hidden" name="selectRow" id="selectRow" value="aa" />
+<input type="hidden" name="in_flag" id="in_flag" value="0" />
+<input type="hidden" name="work_operation_uid" id="work_operation_uid" />	
+<!--<script src="vendor1/jquery/jquery-3.2.1.min.js"></script>
+<script src="vendor1/bootstrap/js/popper.js"></script>
+<script src="vendor1/bootstrap/js/bootstrap.min.js"></script>
+<script src="vendor1/select2/select2.min.js"></script>
+<script src="js1/main.js"></script>   -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".onlynum").keyup(function(){$(this).val( $(this).val().replace(/[^0-9]/g,"") );} );
+
+	//getProcessWarehouseItemList();
+	getFaultyReason();
+
+	// 투입자재등록
+	$("#btnRegistInItem").click(function (event) {
+		// 투입자재 수량 입력했나 확인
+		$(".incnt").each(function(){
+			if($(this).val() == "") {
+				alert("투입수량을 입력하세요");
+				return false;
+			}
+		});	
+		
+		$(".lotno").each(function(){
+			if($(this).val() == "") {
+				alert("Lot No를 입력하세요");
+				return false;
+			}
+		});
+	
+		//stop submit the form, we will post it manually.
+		event.preventDefault();
+
+		// Get form
+		var form = $('#inItemFrm')[0];
+
+		// Create an FormData object
+		var data = new FormData(form);
+
+		// If you want to add an extra field for the FormData
+		data.append("CustomField", "This is some extra data, testing");
+
+		// disabled the submit button
+		$("#btnRegistInItem").prop("disabled", true);
+		
+		$.ajax({
+			type: "POST",
+			enctype: 'multipart/form-data',
+			url: "../ajax.php",
+			data: data,
+			processData: false,
+			contentType: false,
+			cache: false,
+			timeout: 600000,
+			success: function (data) {
+				//getData(1);
+				alert("투입자재를 등록하였습니다");
+				$('.input_material').css('right','-100%');
+				$("#in_item_tb tbody").html("");
+				$("#btnRegistInItem").prop("disabled", false);
+			},
+			error: function (e) {
+				$("#btnRegistInItem").prop("disabled", false);
+			}
+		});
+	});
+
+	// 생산실적
+	$("#btnRegistProductCnt").click(function (event) {
+		if($("#end_make_cnt").val() == "") {
+			alert("생산수량을 입력하세요");
+			return false;
+		}
+
+		if(Number($("#end_make_cnt").val()) > Number($("#end_cnt").val())) {
+			if(confirm("생산수량이 지시수량 보다 많습니다. 계속 진행하시겠습니까?")) {
+
+			} else {
+				return false;
+			}
+		}
+		
+		if(Number($("#end_faulty_cnt").val()) > 0) {
+			if($("#end_faulty_reason option:selected").val() == 0) {
+				alert("불량수량이 있을 경우에는 불량사유를 등록하셔야 합니다");
+				return false;
+			}
+		}
+
+		// 투입자재 없이 공정만 거칠 수 있으므로 이 부분은 주석
+		if(Number($("#in_flag").val()) > 0) {
+			$(".in_cnt").each(function(){
+				if($(this).val() == "" || $(this).val() == 0) {
+					alert("투입수량을 입력하세요");
+					return false;
+				}
+			});
+		}
+		
+	
+		//stop submit the form, we will post it manually.
+		event.preventDefault();
+
+		// Get form
+		var form = $('#endFrm')[0];
+
+		// Create an FormData object
+		var data = new FormData(form);
+
+		// If you want to add an extra field for the FormData
+		data.append("CustomField", "This is some extra data, testing");
+
+		// disabled the submit button
+		$("#btnRegistInItem").prop("disabled", true);
+		
+		$.ajax({
+			type: "POST",
+			enctype: 'multipart/form-data',
+			url: "../ajax.php",
+			data: data,
+			processData: false,
+			contentType: false,
+			cache: false,
+			timeout: 600000,
+			success: function (data) {
+				$("#end_make_cnt").val("");
+				getData(1);
+				$('.end_job').css('right','-100%');
+				$("#btnRegistInItem").prop("disabled", false);
+			},
+			error: function (e) {
+				$("#btnRegistInItem").prop("disabled", false);
+				getData(1);
+			}
+		});
+	});
+});
+
+$(document).on("keyup",".comma",
+	function(){
+		$(this).number(true);
+	}
+);
+
+// 작업준비
+function workReady() {
+	var parameter = {"mode" : "sRegistWorkReady", "process" : $("#process").val(), "machine" : $("#machine").val()}
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			$("#work_operation_uid").val(str);
+			alert("작업준비를 시작합니다");
+		}
+	});
+}
+
+// 작업준비완료
+function workReadyEnd() {
+	var parameter = {"mode" : "sRegistWorkReadyEnd", "process" : $("#process").val(), "machine" : $("#machine").val(), "work_operation_uid" : $("#work_operation_uid").val()}
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			alert("작업준비를 종료합니다");
+		}
+	});
+}
+
+function showAlert(txt) {
+	$("#message").html(txt);
+	$("#alertModal").modal("show");
+}
+
+function showModal(modal_nm) {
+	$("#" + modal_nm).modal('show');
+}
+
+function hideModal(modal_nm) {
+	$("#" + modal_nm).modal("hide");
+}
+
+
+
+
+// 공정에 투입된 자재 리스트 - 모달용
+function getProcessWarehouseItemList() {
+	var tag = "";
+	var parameter = {"mode" : "getProcessWarehouseItemList", "process" : $("#process").val()};
+	$.getJSON("../ajax.php", {"parameter" : parameter}, function(json) {
+		if(json != null) {
+			for(var i = 0 ; i < json.length ; i++) {
+				tag += "<tr onclick=\"postInItem(" + json[i].uid + ", '" + json[i].item_cd + "', '" + json[i].item_nm + "', '" + json[i].standard + "', '" + json[i].unit + "', '" + json[i].cnt + "', '" + json[i].lot_no + "'); delTr(this)\" style='cursor:pointer'>";
+				tag += "<td>" + json[i].item_cd + "</td>";
+				tag += "<td>" + json[i].item_nm + "</td>";
+				tag += "<td>" + json[i].standard + "</td>";
+				tag += "<td>" + json[i].unit + "</td>";
+				tag += "<td>" + json[i].cnt + "</td>";
+				tag += "<td>" + json[i].lot_no + "</td>";
+				tag += "<td>" + json[i].create_dt + "</td>";
+				tag += "</tr>";
+			}
+
+			$("#process_warehouse_tb tbody").html(tag);
+			showModal('myModal');
+		} else {
+
+		}
+	});
+}
+
+// TR 삭제
+function delTr(flag){
+	var tr = $(flag);
+	tr.remove();
+}
+
+function postInItem(uid, item_cd, item_nm, standard, unit, cnt, lot_no) {
+	var flag = $("#in_flag").val();
+
+	var tag = "<tr>";
+	tag += "<td><input type='hidden' name='in_uid[]' id='in_uid_" + flag + "' value='" + uid + "' /><input type='hidden' name='in_item_cd[]' name='in_item_cd_" + flag + "' value='" + item_cd + "' />" + item_cd + "</td>";
+	tag += "<td><input type='hidden' name='in_item_nm[]' id='in_item_nm_" + flag + "' value='" + item_nm + "' />" + item_nm + "</td>";
+	tag += "<td><input type='hidden' name='in_standard[]' id='in_standard_" + flag + "' value='" + standard + "' />" + standard + "</td>";
+	tag += "<td><input type='hidden' name='in_unit[]' id='in_unit_" + flag + "' value='" + unit + "' />" + unit + "</td>";
+	tag += "<td><input type='text' class='form-control' name='in_stock[]' id='in_stock_" + flag + "' value='" + cnt + "' readonly /></td>";
+	tag += "<td><input type='text' class='in_cnt form-control' name='in_cnt[]' id='in_cnt_" + flag + "' value='" + cnt + "' onkeyup='checkInCnt(this.value, " + flag + ")' /></td>";
+	tag += "<td><input type='hidden' name='in_lot_no[]' id='in_lot_no_" + flag + "' value='" + lot_no + "'>" + lot_no + "</td>";
+	tag += "</tr>";
+
+	$("#input_item_tb tbody").append(tag);
+	$("#in_flag").val(Number(flag) + 1);
+}
+
+function checkInCnt(cnt, flag) {
+	var stock = $("#in_stock_" + flag).val();
+	if(Number(cnt) > Number(stock)) {
+		alert("투입수량이 현 공정의 재고수량보다 많을 수 없습니다");
+		$("#in_cnt_" + flag).val("");
+	}
+}
+
+//==================================================
+// barcode 에 포커스
+//setTimeout(function(){$("input#barcode").focus();},100);
+
+$('#barcode').keypress(function(e){ 
+	if(e.keyCode!=13) return; 
+	registIn($("#barcode").val());
+
+	$("#barcode").val("");
+}); 
+
+function registIn(barcode) {
+	var tag = "";
+	var parameter = {"mode" : "sGetBarcodeInfo", "barcode" : barcode, "work_uid" : $("#work_uid").val(), "process" : $("#process").val(), "machine" : $("#machine").val()};
+
+	$.getJSON("../ajax.php", {"parameter" : parameter}, function(json) {
+		if(json != null) {
+			if(json.result == "false") {
+				alert("해당 품목은 현재공정에 투입되는 자재가 아닙니다");
+			} else if(json.result == "true") {
+				tag += "<tr>";
+				tag += "<td class='td'><input type='hidden' name='item_cd[]' value='" + json.item_cd + "' />" + json.item_cd + "</td>";
+				tag += "<td class='td'><input type='hidden' name='item_nm[]' value='" + json.item_nm + "' />" + json.item_nm + "</td>";
+				tag += "<td class='td'><input type='hidden' name='standard[]' value='" + json.standard + "' />" + json.standard + "</td>";
+				tag += "<td class='td'><input type='hidden' name='unit[]' value='" + json.unit + "' />" + json.unit + "</td>";
+				tag += "<td class='td'><input type='hidden' name='incnt[]' value='" + json.cnt + "' />" + json.cnt + "</td>";
+				tag += "<td class='td'><input type='hidden' name='lot_no[]' value='" + json.lot_no + "' />" + json.lot_no + "</td>";
+				tag += "</tr>";
+
+				$("#in_item_tb tbody").append(tag);
+			}
+		} else {
+			alert("해당 바코드의 품목을 찾지 못했습니다");
+		}	
+	});
+}
+//==================================================
+
+//==================================================
+// 작업중단
+function stopWork() {
+	
+	if($("#work_uid").val() == "") {
+		alert("작업을 선택하신 후에 진행하세요");
+		return false;
+	}
+	
+	var parameter = {"mode" : "sStopWork", "work_uid" : $("#work_uid").val()};
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			var array_str = str.split("_");
+
+			if(array_str[0] == "success") {
+				alert("작업을 중단하였습니다\r\n작업을 다시 시작하시려면 작업재개 버튼을 클릭하시고 진행하시면 됩니다");
+				$("#work_down_uid").val(array_str[1]);
+			} else if(array_str[0] == "notstart") {
+				alert("작업이 시작되지 않아서 해당 작업을 중단할 수 없습니다");
+			} else if(array_str[0] == "alreadystop") {
+				alert("이미 중단된 작업입니다");
+			} else {
+				alert(str);
+			}
+		}
+	});
+}
+//==================================================
+
+//==================================================
+// 작업재개
+function restartWork() {
+	if($("#work_uid").val() == "") {
+		alert("작업을 선택하신 후에 진행하세요");
+		return false;
+	}
+	
+	var parameter = {"mode" : "sCheckStopWork", "work_uid" : $("#work_uid").val()};
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			if(str == "nostop") {
+				alert("중단된 작업이 아닙니다");
+			} else if(str == "success") {
+				$("#use").val("y");
+				$('.resume_operation').css('right','0');
+			}
+		}
+	});
+}
+//==================================================
+
+//==================================================
+// 작업재개 등록
+function registRestartWork() {
+	var parameter = {"mode" : "sRegistRestartWork", "work_uid" : $("#work_uid").val(), "process" : $("#stop_process").val(), "machine" : $("#stop_machine").val(), "abnormal_type" : $("#abnormal_type option:selected").val(), "down_type" : $("#down_type option:selected").val(), "abnormal_comment" : $("#abnormal_comment").val(), "action_comment" : $("#action_comment").val(), "work_down_uid" : $("#work_down_uid").val()};
+
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			if(str == "success") {
+				alert("작업을 재개합니다");
+				$('.resume_operation').css('right','-100%');
+			} else if(str == "notstop") {
+				alert("중단된 작업이 아닙니다");
+			} else {
+				alert(str);
+			}
+		}
+	});
+}
+
+
+//==================================================
+// 투입자재 버튼을 클릭하였을 경우
+function initem() {
+	if($("#work_uid").val() == "") {
+		alert("작업을 선택하신 후에 투입자재를 등록하세요");
+		return false;
+	}
+	
+	// 입력상황이 발생했을 때 새로고침으로 창이 사라지는거 막기
+	$("#use").val("y");
+
+	$('.input_material').css('right','0');
+	var a = setTimeout(function(){$("input#barcode").focus();},100);
+
+}
+//==================================================
+
+
+//==================================================
+// 작업시작 버튼을 클릭하였을 경우
+function startWork() {
+	if($("#work_uid").val() == "") {
+		alert("작업을 선택하신 후에 작업을 시작하세요");
+		return false;
+	}
+
+	// 생산모니터링을 위한 work_station 에 등록
+	var parameter = {"mode" : "sRegistWorkStation", "uid" : $("#work_uid").val(), "process" : $("#process").val(), "machine" : $("#machine").val(), "item_cd" : $("#work_item_cd").val(), "cnt" : $("#work_cnt").val()};
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			if(str.trim() == "already") {
+				alert("이미 시작된 작업입니다");
+			} else if(str.trim() == "impossible") {
+				alert("같은 설비에서 동시에 작업을 진행할 수 없습니다");
+			} else if(str.indexOf("_") != -1) {
+				var st = str.split("_");
+				if(st[1] == "shortage") {
+					alert("투입자재 중 " + st[0] + "이 " + st[2] + " 개 부족합니다.\r\n자재 투입 후 진행하세요");
+					return false;
+				}
+				alert("작업을 시작합니다");
+			} else if(str.trim() == "success") {
+				alert("작업을 시작합니다");
+				getData(1);
+			} else if(str.trim() == "nostay") {
+				alert("이미 시작된 작업이거나, 중단된 작업입니다\r\n중단된 작업일 경우 작업재개를 클릭하여 진행하세요");
+			} else {
+				alert(str);
+			}
+		}
+	});
+}
+
+function checkEndWork() {
+	if($("#work_uid").val() == "") {
+		alert("작업을 선택하신 후에 작업을 시작하세요");
+		return false;
+	}
+
+	var parameter = {"mode" : "sCheckEndWork", "work_uid" : $("#work_uid").val()};
+	
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			if(str == "nostop") {
+				alert("작업이 중단되었거나, 이미 종료된 작업입니다");
+			} else if(str == "success") {
+				endWork();
+
+				$("#use").val("y");
+				$('.end_job').css('right','0');
+			}
+		}
+	});
+}
+
+//==================================================
+// 작업종료 버튼을 클릭하였을 경우
+function endWork() {
+	if($("#work_uid").val() == "") {
+		alert("작업을 선택하신 후에 작업을 종료하세요");
+		return false;
+	}
+
+
+	// 생산모니터링을 위한 work_station 에 등록
+	var parameter = {"mode" : "sGetWork", "uid" : $("#work_uid").val()};
+	$.getJSON("../ajax.php", {"parameter" : parameter}, function(json) {
+		if(json != null) {
+			$("#end_work_cd").val(json.work_cd);
+			$("#s_work_cd").html(json.work_cd);
+			$("#end_item_cd").val(json.item_cd);
+			$("#s_item_cd").html(json.item_cd);
+			$("#end_item_nm").val(json.item_nm);
+			$("#s_item_nm").html(json.item_nm);
+			$("#end_standard").val(json.standard);
+			$("#s_standard").html(json.standard);
+			$("#end_cnt").val(json.cnt);
+			$("#s_cnt").html(json.cnt);
+			
+			//createLotNo(json.item_cd);
+
+			//getInItem(json.item_cd);
+		}
+	});
+}
+//==================================================
+
+function getFaultyReason() {
+	var tag = "";
+	var parameter = {"mode" : "sGetFaultyReason"};
+	$.getJSON("../ajax.php", {"parameter" : parameter}, function(json) {
+		if(json != null) {
+			for (var i = 0 ; i < json.length ; i++ )
+			{
+				tag += "<option value='" + json[i].uid + "'>" + json[i].reason + "</option>";
+			}
+
+			$("#end_faulty_reason").append(tag);
+		}
+	});
+}
+
+function createLotNo(item_cd) {
+	var parameter = {"mode" : "createLotNo", "type" : "P", "item_cd" : item_cd, "process" : $("#process").val()}
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			$("#end_lot_no").val(str);
+		}
+	});
+}
+
+function getInItem(item_cd) {
+	var tag = "";
+	var parameter = {"mode" : "sGetInItem", "process" : $("#process").val(), "item_cd" : item_cd};
+
+	$.getJSON("../ajax.php", {"parameter" : parameter}, function(json) {
+		if(json != null) {
+			for(var i = 0 ; i < json.length ; i++) {
+				tag += "<tr>";
+				tag += "<td><input type='hidden' name='in_item_cd[]' value='" + json[i].item_cd + "' />" + json[i].item_cd + "</td>";
+				tag += "<td><input type='hidden' name='in_item_nm[]' value='" + json[i].item_nm + "' />" + json[i].item_nm + "</td>";
+				tag += "<td><input type='hidden' name='in_standard[]' value='" + json[i].standard + "' />" + json[i].standard + "</td>";
+				tag += "<td><input type='hidden' name='in_unit[]' value='" + json[i].unit + "' />" + json[i].unit + "</td>";
+				tag += "<td><input type='text' class='form-control input-lg onlynum comma in_cnt' name='in_cnt[]' id='in_cnt_" + i + "' onkeyup='checkProcessWarehouseCnt(this.value, '" + json[i].item_cd + "', '" + json[i].standard + "', " + i + ")' /></td>";
+				tag += "<td>" + json[i].lot_no + "</td>";
+				tag += "</tr>";
+			}
+			
+			//alert(tag);
+
+			$("#input_item_tb tbody").html(tag);
+		}
+	});
+}
+
+// 투입자재 수량을 입력할 때 마다 해당 공정 창고의 수량과 비교하여 경고한다
+function checkProcessWarehouseCnt(v, item_cd, standard, flag) {
+	var parameter = {"mode" : "checkProcessWarehouseCnt", "process" : $("#process").val(), "item_cd" : item_cd, "standard" : standard, "cnt" : v};
+	$.ajax({
+		type : "post",
+		data : parameter,
+		url : "../ajax.php",
+		success : function(str) {
+			if(str == "false") {
+				alert("공정에 투입된 수량보다 많은 수를 입력할 수 없습니다");
+				$("#in_cnt_" + flag).val("");
+				return false;
+			}
+		}
+	});
+}
+
+$(function(){
+	$(".box1").css('height',window.innerHeight);
+});
+
+
+//작업종료 열고 닫기
+$(function(){
+	$('.end_job_close').click(function(){
+		$("#use").val("n");
+		$('.end_job').css('right','-100%');
+	});
+});
+
+$(function(){
+	$('.resume_operation_close').click(function(){
+		$("#use").val("n");
+		$('.resume_operation').css('right','-100%');
+	});
+});
+
+$(function() {
+	$(".input_material_close").click(function() {
+		$("#use").val("n");
+		$('.input_material').css('right','-100%');
+	});
+});
+
+//자재출고요청
+$(function() {
+	$('.materials_btn').click(function() {
+		$('.materials').css('right','0');		
+	});
+	$('.materials_close').click(function(){
+		$('.materials').css('right','-100%')
+	})
+});
+
+//자재반납
+$(function() {
+	$('.materials_return_btn').click(function() {
+		$('.materials_return').css('right','0');		
+	});
+	$('.materials_return_close').click(function(){
+		$('.materials_return').css('right','-100%')
+	})
+});
+
+$(document).ready(function() {
+	getData();
+});
+
+// $(function() {
+// 	setInterval(function() {
+// 		getData();
+// 	}, 60000); // 1분에 한번
+// });
+
+// 세션 유지를 위하여 시스템 리로드
+$(function() {
+	setInterval(function() {
+		if($("#use").val() == "n") location.reload();
+	}, 120000); // 1분에 한번
+});
+
+// 작업지시서 불러오기
+function getData() {
+	var tag = "";
+	var parameter = {"mode" : "sGetWorkList", "process" : $("#process").val(), "machine" : $("#machine").val()};
+
+	$.getJSON("../ajax.php", {"parameter" : parameter}, function(json) {
+		if(json != null) {
+			for(var i = 0 ; i < json.length ; i++) {
+				if(json[i].state == '작업완료') {
+					tag += "<tr style='background-color:#ff794d'>";
+				} else if(json[i].state == "작업취소") {
+					tag += "<tr style='background-color:#ff794d'>";
+				} else {
+					if($("#selectRow").val() == i) tag += "<tr onclick=\"postWork('" + json[i].uid + "', '" + json[i].item_cd + "', '" + json[i].cnt + "')\" style='cursor:pointer; background-color:#dce775'>";
+					else tag += "<tr onclick=\"toggle(this); postWork('" + json[i].uid + "', '" + json[i].item_cd + "', '" + json[i].cnt + "')\" style='cursor:pointer'>";
+				}
+				tag += "<td>" + json[i].seq + "</td>";
+				tag += "<td>" + json[i].work_cd + "</td>";
+				tag += "<td>" + json[i].state + "</td>";
+				tag += "<td>" + json[i].account_nm + "</td>";
+				//tag += "<td>" + json[i].order_cd + "</td>";
+				//tag += "<td>" + json[i].process_nm + "</td>";
+				tag += "<td>" + json[i].item_cd + "</td>";
+				tag += "<td>" + json[i].item_nm + "</td>";
+				tag += "<td>" + json[i].standard + "</td>";
+				tag += "<td>" + json[i].cnt + "</td>";
+				tag += "<td>" + json[i].remain_cnt + "</td>";
+				tag += "</tr>";
+			}
+		} else {
+
+		}
+	
+		$("#tb tbody").html(tag);
+	});
+
+	//color();
+}
+
+function color() {
+	$("#tb tbody>tr").eq($("#selectRow").val()).css("background-color","#dce775");
+}
+
+//==================================================
+// 선택된 품목 테이블 선택된 TR 색상 바꾸기
+//==================================================
+function toggle(it) {
+	$("#selectRow").val($(it).index());
+	$("#tb tr").css("background-color","");
+	if ((it.style.backgroundColor == "none") || (it.style.backgroundColor == "")) {
+		it.style.backgroundColor = "#dce775";
+	} else {
+		it.style.backgroundColor = "";
+	}
+}
+
+function postWork(uid, item_cd, cnt) {
+	$("#work_uid").val(uid);
+	$("#work_item_cd").val(item_cd);
+	$("#work_cnt").val(cnt);
+}
+</script>
+
+
+
+</body>
+</html>

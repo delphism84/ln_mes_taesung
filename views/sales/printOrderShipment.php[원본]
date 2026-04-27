@@ -1,0 +1,255 @@
+<?
+session_start();
+require_once('../../connection.php');
+require_once('../../library/json.php');
+require_once('../../library/function.php');
+session_start();
+extract($_POST);
+extract($_GET);
+?>
+
+<?
+
+//array $lot_no="";
+$sql = "select * from erp_order_shipment where uid=".$uid;
+//echo $sql;
+$result = mysql_query($sql);
+$t = mysql_fetch_object($result);
+
+$sql1 = "select * from erp_order_shipment_item where sid=".$uid;
+//echo $sql1."<BR>";
+$result1 = mysql_query($sql1);
+$row_count = 1;
+$checkEcho="";
+while($t1 = mysql_fetch_object($result1)) {
+	
+	$sid[$row_count]		=$t1->sid; 
+	$item_cd[$row_count]	=$t1->item_cd;
+	$item_nm[$row_count]	=$t1->item_nm;
+	$standard1[$row_count]	=$t1->standard1;
+	$material[$row_count]	=$t1->material; 
+	$unit[$row_count]		=$t1->unit; 
+	$cnt[$row_count]		=$t1->cnt;
+	$out_cnt[$row_count]	=$t1->out_cnt; 
+	$remain_cnt[$row_count]	=$t1->remain_cnt;
+	$box_cnt[$row_count]	=$t1->box_cnt;
+	$unit_price[$row_count]	=$t1->unit_price;
+	$adjustments[$row_count]=$t1->adjustments; 
+	$supply_price[$row_count]=$t1->supply_price;
+	$tax[$row_count]		=$t1->tax;
+	$total_price[$row_count]=$t1->total_price; 
+	$state[$row_count]		=$t1->state; 
+	$remark[$row_count]		=$t1->remark;
+	$regdate[$row_count]	=$t1->regdate;
+	
+	/* 납품일자랑 생산입고일을 같이 해달라고 요청. 2019.01.16
+	$sql100 = "select * from erp_production_into_item where item_cd='".$t1->item_cd."'and standard1='".$t1->standard1."' and warehouse_nm='".$t1->warehouse_nm."' and lot_no_cd='".$t1->lot_no_cd."'";
+
+	$result100 = mysql_fetch_object(mysql_query($sql100));
+
+	$porduct_inregdate[$row_count] = $result100->regdate;
+
+	$checkEcho = $checkEcho."//".$porduct_inregdate[$row_count];
+	*/
+
+	//$sql2 = "select * from erp_item where item_cd='".$t1->item_cd."' and standard1='".$t1->standard1."'";
+	//echo $sql2."<BR>";
+	//$result2 = mysql_query($sql2);
+	//$t2 = mysql_fetch_object($result2);
+
+		$barcode[$row_count] = $t1->lot_no_cd;
+
+	$row_count++;
+}
+
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title> 공정 이동표 출력</title>
+	<meta name="autdor" content="Daniel Arlandis - daniarlandis.es">
+	<meta name="description" content="jQuery PrintMe - A jQuery plugin for print any page element ">
+	<meta name="viewport" content="widtd=device-widtd">
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/css/main.css" rel="stylesheet">
+
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery-printme.js"></script>
+	<script src="/assets/js/jquery.printElement.js"></script>
+	<script src="/assets/js/jquery.mb.browser.min.js"></script>
+	
+	<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#example1").click(function(){
+			$("#dataexample").printMe();
+		});
+
+		$("#example2").click(function(){
+			$("#dataexample2").printMe({
+				"patd" : ["/assets/css/main.css","/assets/css/example2.css","/assets/css/bootstrap.min.css"]
+			});
+		});
+
+		$("#example3").click(function(){
+			$("#dataexample3").printMe({
+				"patd" : ["/assets/css/example.css"],
+				"title" : "Document title"
+			});
+		});
+
+
+	});
+	</script>
+	<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+<script type="text/javascript" src="/assets/js/printPreview.js"></script>
+<script type="text/javascript">
+        $(function(){
+            $("#btnPrintPreview").printPreview({
+                obj2print:'#masterContent',
+                width:'900px'
+                /*optional properties witd default values*/
+                //obj2print:'body',     /*if not provided full page will be printed*/
+                //style:'',             /*if you want to override or add more css assign here e.g: "<style>#masterContent:background:red;</style>"*/
+                //widtd: '670',         /*if widtd is not provided it will be 670 (default print paper widtd)*/
+                //height:screen.height, /*if not provided its height will be equal to screen height*/
+                //top:0,                /*if not provided its top position will be zero*/
+                //left:'center',        /*if not provided it will be at center, you can provide any number e.g. 300,120,200*/
+                //resizable : 'yes',    /*yes or no default is yes, * do not work in some browsers*/
+                //scrollbars:'yes',     /*yes or no default is yes, * do not work in some browsers*/
+                //status:'no',          /*yes or no default is yes, * do not work in some browsers*/
+                //title:'Print Preview' /*title of print preview popup window*/
+            });
+        });
+    </script>
+	<script type="text/javascript">
+	<!--
+
+	$(document).ready(function() {
+		$("#btnPrint").click(function() { //이벤트 발생시킬 버튼 아이디
+			printElem({ 
+			printMode: 'popup', //팝업설정 printMode option = popup, iframe,
+			overrideElementCSS:[ "/assets/css/main.css","/assets/css/example2.css","/assets/css/bootstrap.min.css", { href:'css경로',media:'print' } ], //overrideElement option : boolean, css경로 
+			pageTitle:'공정 이동표 출력', //팝업 타이틀
+			leaveOpen:true //인쇄하고도 창을 띄우기(true)/안띄우기(false). Default는 false
+			});
+		});
+	});
+	  function printElem(options){	
+			$('#masterContent').printElement(options); //팝업으로 띄울 영역 Div 아이디
+			//$('#masterContent').printElement({}); //미리보기 창 없이 인쇄 
+			//$('#masterContent').printElement({ printMode: 'popup' }); //인쇄 후 미리보기 창이 사라짐
+			//$('#masterContent').printElement({ leaveOpen: true, printMode: 'popup' });  //인쇄 후 미리보기 창이 남아있음
+			//$('#masterContent').printElement({ overrideElementCSS: true }); //CSS무시
+			//$('#masterContent').printElement({ overrideElementCSS: ['http://xxxx.com/test.css'] })//외부 CSS적용
+      } 
+	//-->
+	</script>
+
+	<style>
+	.hr {
+		border: none;
+		border-top: 1px dotted black;
+		color: #fff;
+		background-color: #fff;
+		height: 1px;
+		width: 100%;
+
+		/*Horizontal*/
+		background-image: linear-gradient(to right, black 33%, rgba(255,255,255,0) 0%);
+		background-position: bottom;
+		background-size: 3px 1px;
+		background-repeat: repeat-x;
+	}
+	.hr2 {
+		border: none;
+		border-left:1px dotted black;
+		color: #fff;
+		background-color: #fff;
+		height: 190px;
+		width: 1px;
+		vertical-align: top;
+
+		/*Vertical*/
+		background-image: linear-gradient(black 33%, rgba(255,255,255,0) 0%);
+		background-position: right;
+		background-size: 1px 3px;
+		background-repeat: repeat-y;
+	}
+	</style>
+
+</head>
+<body>
+	
+	<!-- Fixed navbar -->
+	<div class="panel-body">
+		<p>
+			<button id="btnPrint" class="btn btn-primary"> Print </button>
+			<button id="btnPrintPreview" class="btn btn-primary"> Print 미리보기</button>
+			<span style="float:right;vertical-align:bottom;text-decoration:underline;padding-right:20px;padding-top:20px;letter-spacing:1.5px;" >1/2 p<span>
+		</p>
+		<hr>
+	</div>
+    <div class="container main" style='width:100%;'>
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="dataexample2">
+					<div id="masterContent"> 
+							<table cellspacing="0" cellpadding="0">
+							<?for ($i=1; $i <$row_count; $i++){?>
+								<?
+								
+								$url[] = "/barcodegen/image.php?barcode=".$barcode[$i];
+								if (($i % 2) == 1){
+								echo "<tr>\n";
+								}?>
+									<td style='width:50%;'>
+										<table class="table table-bordered" style='width:100%;height:190px;border:2px solid #000000'>
+											<tr style="height:50px">
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> Lot.NO</th>
+												<td colspan=3  style="vertical-align: middle;white-space:nowrap; "><img src='<?=$url[$i-1]?>' ></td>
+											</tr>
+											<tr>
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> 모델명</th>
+												<td class="col-xs-4" style="vertical-align: middle;white-space:nowrap"><?=$item_nm[$i]?></td>
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> 거래처</th>
+												<td class="col-xs-4" style="font-size:9pt;vertical-align: middle;white-space:nowrap;padding:1px 1px 1px 8px;"><?=$t->account_nm?></td>
+											</tr>
+											<tr>
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> 수량</th>
+												<td class="col-xs-4" style="vertical-align: middle;white-space:nowrap" align="center"><?=number_format($cnt[$i])?></td>
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> 도번</th>
+												<td class="col-xs-4" style="vertical-align: middle;white-space:nowrap"><?=$item_cd[$i]?></td>
+											</tr>
+											<tr>	
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> 생산입고일</th>
+												<td class="col-xs-4" style="vertical-align: middle;white-space:nowrap"><?=substr($t->delivery_dt,0,10)?></td>
+												<th class="col-xs-2" style="vertical-align: middle;white-space:nowrap"> 납품일자</th>
+												<td class="col-xs-4" style="vertical-align: middle;white-space:nowrap"><?=substr($t->delivery_dt,0,10)?></td>
+											</tr>
+										</table>
+									</td>
+									<?
+									if (($i % 2) == 1){?>
+										<td style="width:10px; vertical-align: top;marging:0 5px; float:left" align="center" class="col-md-1"><p class='hr2'>&nbsp;</p></td>
+									<?}?>
+									<?
+									if (($i % 2) == 0){
+									 echo "</tr>\n";
+									 echo "<tr><td colspan='3'><p class='hr'></p></td></tr>\n"; 
+									}?>
+							<?}?>
+							</table>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+.cf 
+{
+	color : red;
+	font-weight: bold;
+}
+
+.summary {
+	margin-left: 15px;
+	font-size: 10pt;
+	color : #1da6c3;
+}
+
+.wrap_box{width:100%; height: 100%;}
+.left_box{width: 40%; float: left; border: 1px solid #ddd; height: 100%; overflow: scroll; overflow-x: hidden; padding: 10px;}
+.right_box{width: 60%; float: left; border: 1px solid #ddd; height: 100%;}
+.top_box{width: 100%; height: 65%; border: 1px solid #ddd; overflow: scroll; overflow-x: hidden; padding: 10px;}
+.bottom_box{width: 100%; height: 35%; border: 1px solid #ddd; overflow: scroll; overflow-x: hidden; padding: 10px}
+.wrap_box h3{color: #555; float: left;}
+.standard_btn{width:40px; padding:7px 0; border:none; font-size:14px; color:#fff;}
+.standard_btn01{background-color:#8000FF;}
+.standard_btn02{background-color:#FE2E64;}
+.enrollment_btn{width:100px; padding:10px; background-color:#81BEF7; border:none; color:#fff; float:left;}
+.back_btn{width:100px; padding:10px; background-color:#D8D8D8; border:none; color:#fff; float:right;}
+.wrap_btn{width:300px; display:block; margin:0 auto;}
+.delete_btn{background-color:#DF013A}

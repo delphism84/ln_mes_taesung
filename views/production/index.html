@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title> jQuery - PrintMe</title>
+	<meta name="author" content="Daniel Arlandis - daniarlandis.es">
+	<meta name="description" content="jQuery PrintMe - A jQuery plugin for print any page element ">
+	<meta name="viewport" content="width=device-width">
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/css/main.css" rel="stylesheet">
+
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery-printme.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#example1").click(function(){
+			$("#dataexample").printMe();
+		});
+
+		$("#example2").click(function(){
+			$("#dataexample2").printMe({
+				"path" : ["/assets/css/main.css","/assets/css/example2.css","/assets/css/bootstrap.min.css"]
+			});
+		});
+
+		$("#example3").click(function(){
+			$("#dataexample3").printMe({
+				"path" : ["/assets/css/example.css"],
+				"title" : "Document title"
+			});
+		});
+
+
+	});
+	</script>
+	<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+<script type="text/javascript" src="/assets/js/printPreview.js"></script>
+<script type="text/javascript">
+        $(function(){
+            $("#btnPrint").printPreview({
+                obj2print:'#masterContent',
+                width:'810'
+                
+                /*optional properties with default values*/
+                //obj2print:'body',     /*if not provided full page will be printed*/
+                //style:'',             /*if you want to override or add more css assign here e.g: "<style>#masterContent:background:red;</style>"*/
+                //width: '670',         /*if width is not provided it will be 670 (default print paper width)*/
+                //height:screen.height, /*if not provided its height will be equal to screen height*/
+                //top:0,                /*if not provided its top position will be zero*/
+                //left:'center',        /*if not provided it will be at center, you can provide any number e.g. 300,120,200*/
+                //resizable : 'yes',    /*yes or no default is yes, * do not work in some browsers*/
+                //scrollbars:'yes',     /*yes or no default is yes, * do not work in some browsers*/
+                //status:'no',          /*yes or no default is yes, * do not work in some browsers*/
+                //title:'Print Preview' /*title of print preview popup window*/
+                
+            });
+        });
+    </script>
+</head>
+<body>
+	
+	<!-- Fixed navbar -->
+	<div class="panel-body">
+		<p>
+			<button id="example2" class="btn btn-primary"> Print </button>
+			<button id="btnPrint" class="btn btn-primary"> Print 미리보기</button>
+		</p>
+		<hr>
+	</div>
+    <div class="container main">
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="dataexample2">
+					<div id="masterContent"> 
+						<?for ($i=1; $i <=6; $i++){?>
+							<table >
+								<tr>
+									<td>
+										<table class="table table-bordered">
+											<tr>
+												<th style="width:75px;"> Lot.NO</th><td colspan=3></td>
+											</tr>
+											<tr>
+												<th> 모델명</th><td></td><th style="width:75px;"> 공급자</th><td></td>
+											</tr>
+											<tr>
+												<th> 수량</th><td></td><th> 도번</th><td></td>
+											</tr>
+											<tr>	
+												<th> 제조일자</th><td></td><th> 납품일자</th><td></td>
+											</tr>
+										</table>
+									</td>
+									<td style="width:10px"></td>
+									<td>	
+										<table class="table table-bordered">
+											<tr>
+												<th style="width:75px;"> Lot.NO</th><td colspan=3></td>
+											</tr>
+											<tr>
+												<th> 모델명</th><td></td><th style="width:75px;"> 공급자</th><td></td>
+											</tr>
+											<tr>
+												<th> 수량</th><td></td><th> 도번</th><td></td>
+											</tr>
+											<tr>	
+												<th> 제조일자</th><td></td><th> 납품일자</th><td></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						<?}?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

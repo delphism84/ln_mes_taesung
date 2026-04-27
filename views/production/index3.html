@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title> jQuery - PrintMe</title>
+	<meta name="author" content="Daniel Arlandis - daniarlandis.es">
+	<meta name="description" content="jQuery PrintMe - A jQuery plugin for print any page element ">
+	<meta name="viewport" content="width=device-width">
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/css/main.css" rel="stylesheet">
+
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery-printme.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#example1").click(function(){
+			$("#dataexample").printMe();
+		});
+
+		$("#example2").click(function(){
+			$("#dataexample2").printMe({
+				"path" : ["/assets/css/example.css","/assets/css/example2.css"]
+			});
+		});
+
+		$("#example3").click(function(){
+			$("#dataexample3").printMe({
+				"path" : ["/assets/css/example.css"],
+				"title" : "Document title"
+			});
+		});
+
+
+	});
+	</script>
+</head>
+<body>
+	<!-- Fixed navbar -->
+    <div class="container main">
+		<div class="page-header" id="examples">
+	        <h1>Examples</h1>
+	    </div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-default">
+		            <div class="panel-heading">
+		              <h3 class="panel-title">Print without css styles</h3>
+		            </div>
+		            <div id="dataexample">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Col1</th>
+									<th>Col2</th>
+									<th>Col3</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td> A </td>
+									<td> B </td>
+									<td> C </td>
+								</tr>
+								<tr>
+									<td> D </td>
+									<td> E </td>
+									<td> F </td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+		            <div class="panel-body">
+		            	<p>Code:</p>
+		            	<p>
+							<code>
+								$("#example").printMe();
+							</code>
+						</p>
+						<hr/>
+						<p>
+							<button id="example1" class="btn btn-primary"> Print </button>
+						</p>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-default">
+		            <div class="panel-heading">
+		              <h3 class="panel-title">Print with external css styles</h3>
+		            </div>
+		            <div id="dataexample2">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="blue">Col1</th>
+									<th class="blue">Col2</th>
+									<th class="blue">Col3</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td> A </td>
+									<td> B </td>
+									<td> C </td>
+								</tr>
+								<tr>
+									<td> D </td>
+									<td> E </td>
+									<td> F </td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+		            <div class="panel-body">
+		            	<p>Code:</p>
+		            	<p>
+							<code>
+								$("#example").printMe({
+									"path": ["path_to/eternal.css"]
+								});
+							</code>
+						</p>
+						<hr/>
+						<p>
+							<button id="example2" class="btn btn-primary"> Print with external css </button>
+						</p>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-default">
+		            <div class="panel-heading">
+		              <h3 class="panel-title">Print with title</h3>
+		            </div>
+		            <div id="dataexample3">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="blue">Col1</th>
+									<th class="blue">Col2</th>
+									<th class="blue">Col3</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td> A </td>
+									<td> B </td>
+									<td> C </td>
+								</tr>
+								<tr>
+									<td> D </td>
+									<td> E </td>
+									<td> F </td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+		            <div class="panel-body">
+		            	<p>Code:</p>
+		            	<p>
+							<code>
+								$("#example").printMe({
+									"path": ["path_to/eternal.css"],
+									"title": "Document title"
+								});
+							</code>
+						</p>
+						<hr/>
+						<p>
+							<button id="example3" class="btn btn-primary"> Print with title</button>
+						</p>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="page-header" id="about">
+	        <h1>About</h1>
+	    </div>
+	    <div class="row">
+	    <p>PrintMe has been developped by Daniel Arlandis <a href="https://twitter.com/menusal">@menusal</a></p>
+	    <br/>
+	    <p>That's about all there is to know! Happy printing! If you find any interesting uses for this little library, please let me know!
+		<br/>Issues and Pull Requests are more than welcome!
+		<br/><br/>If you have any questions, drop me a line at: daniarlandis@gmail.com</p>
+	    </div>
+
+	</div>
+
+</body>
+</html>

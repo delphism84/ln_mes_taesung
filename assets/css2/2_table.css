@@ -1,0 +1,46 @@
+@charset "utf-8";
+
+/*지출결의서 테이블(회계) line_#000*/
+table.accounting,
+table.insa{width: 100%; padding:0; font-size:12px; margin:6px 0 0 0; border-collapse:collapse; clear:both; border:1px solid #000;}
+.accounting th{text-align:center; color:#000; line-height:16px; padding:4px 2px 5px 2px; border-right:1px solid #999; border-bottom:1px solid #999;word-wrap: break-word; background: #eef1f6;}
+.accounting td{font-weight:normal; line-height:16px; padding:4px 2px 5px 2px; border-right:1px solid #999; border-bottom:1px solid #999;word-wrap: break-word;}
+.insa th{text-align:center; color:#000; line-height:16px; padding:4px 2px 5px 2px; border-right:1px solid #000; border-bottom:1px solid #000;word-wrap: break-word; background: #eef1f6;}
+.insa td{font-weight:normal; line-height:16px; padding:4px 2px 5px 2px; border-right:1px solid #000; border-bottom:1px solid #000;word-wrap: break-word;}
+.insa tr.bottom_line td{border-bottom:2px solid #000}
+.p_insa{width: 100%; padding:0; font-size:12px; margin:6px 0 0 0; border-collapse:collapse; clear:both; border:1px solid #000;}
+.p_insath{text-align:center; color:#000; line-height:16px; padding:4px 2px 5px 2px; border-right:1px solid #000; border-bottom:1px solid #000;word-wrap: break-word; background: #eef1f6;font-weight:normal}
+.p_insatd{font-weight:normal; line-height:16px; padding:4px 2px 5px 2px; border-right:1px solid #000; border-bottom:1px solid #000;word-wrap: break-word;}
+
+/*전표쪽 border값 진하게*/
+table.p_border{	width:100%; border-collapse: collapse; border:1px solid #999; clear:both; table-layout:fixed;}
+.p_border th{color:#000; font-size:12px; font-weight:normal; text-align:center; line-height:18px; padding:3px 2px; table-layout:fixed; border-bottom:1px solid #999; border-right:1px solid #999; word-wrap:break-word; background: #ebf1f5 url(/ECMain/ECount.Common/Images/printtitBg.gif) top left no-repeat;}
+.p_border td{color:#000; font-size:11px; font-weight:normal; text-align:left; padding:2px; table-layout:fixed;word-wrap:break-word; line-height:16px; border-bottom:1px solid #999; border-right:1px solid #999;}
+tr.p_bordergray td{background-color:#f7f7f7; font-size:11px; font-weight:bold; padding:2px;word-wrap: break-word; line-height:14px; border:1px solid #999; border-right:1px solid #999;}
+
+/*출력물 쪽 메인*/
+.reporting_title{padding:10px 0 5px 12px; font-size:12px; font-weight:bold; color:#000; background-color:#f5f5f5;}
+/* es_재고, eb_회계 */
+.es_reporting,
+.eb_reporting{margin:10px 0;} 
+.es_reporting td,
+.eb_reporting td{vertical-align:top; border-right:1px solid #999;}     
+.es_reporting dl{padding-left:38px;}    
+.es_reporting dt,
+.eb_reporting dt{width:160px; height:22px; padding:8px 0 3px 0; border-bottom:1px solid #c9c9c9; font-weight:bold; color:#000;}
+.es_reporting dd,
+.eb_reporting dd{padding:4px 0 3px 12px; background: url(/ECMain/ECount.Common/Images/icon_star.gif) no-repeat 7px left;}  
+.eb_reporting dl{padding-left:10px;}  
+dd.img_but{background:none; padding:5px 0;}
+
+/*==========================================================================================*/ 
+/* 테이블 너비를 auto로 지정 - 테이블에만 사용하기!*/
+/*==========================================================================================*/ 
+.table-auto {width:auto !important}
+
+/*==========================================================================================*/ 
+/* css다른파일에 적용해야할것같음... */ 
+/*==========================================================================================*/ 
+
+/*td의 세로정렬시 사용*/ /*2_setting.css에 valign_middle있음*/
+.valign_top{vertical-align:top}

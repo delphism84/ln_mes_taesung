@@ -1,0 +1,1015 @@
+<?require_once("assets/head_pop.php");?>
+<?
+
+session_start();
+extract($_POST);
+extract($_GET);
+?>
+
+<div class="main-content">
+	<div class="main-content-inner">
+
+		<div class="page-content">
+
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<form name="frm" id="frm" method="post" action="index.php" enctype="multipart/form-data">
+						<input type="hidden" name="controller" id="controller" value="sales" />
+						<input type="hidden" name="action" id="action" value="updatePageOrderShipment" />
+						<input type="hidden" name="dialogID" id="dialogID" value="<?=$dialogID?>" />
+						<input type="hidden" name="uid" id="uid" value="<?=$t->uid?>" />
+						<input type="hidden" name="cntTotal" id="cntTotal" value="" />
+						<input type="hidden" name="unitPriceTotal" id="unitPriceTotal" value="" />
+						<input type="hidden" name="supplyPriceTotal" id="supplyPriceTotal" value="" />
+						<input type="hidden" name="taxTotal" id="taxTotal" value="" />
+						<input type="hidden" name="priceTotal" id="priceTotal" value="" />
+
+						<!-- 테이블 -->
+						<table id="simple-table" class="table  table-bordered table-hover">
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 출하일자</th>
+								<td class="col-xs-5" colspan="3">
+									<!-- <input type="text" name="order_cd" id="order_cd" readonly /> -->
+									<div>
+										<span class="input-icon input-icon-right">
+											<div class="input-group">
+												<input class=" date-picker" name="shipment_dt" id="shipment_dt" type="text" data-date-format="yyyy/mm/dd" value='<?=$t->shipment_dt?>'/>
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+											</div>
+										</span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 주문서코드</th>
+								<td class="col-xs-5">
+									<div class="input-group">
+										<span class="input-icon input-icon-right">
+											<div class="input-group">
+												<input type="hidden" name="order_uid" id="order_uid"  value='<?=$t->order_uid?>' readonly />
+												<!--
+												<input type="text" name="order_cd" id="order_cd" onclick="centerOpenWindow('views/popup/orderListPut.php', '주문서서리스트', 700, 500)" value='<?=$t->order_cd?>' readonly />
+												<span class="input-group-addon btn-purple" style="cursor:pointer" onclick="centerOpenWindow('views/popup/orderListPut.php', '주문서리스트', 700, 500)">
+													<i class="ace-icon fa fa-search icon-on-right bigger-110" style="color:#ffffff"></i>
+												</span>
+												-->
+												<input type="text" name="order_cd" id="order_cd"  value='<?=$t->order_cd?>' readonly />
+												<span class="input-group-addon btn-purple" style="cursor:pointer" >
+													<i class="ace-icon fa fa-search icon-on-right bigger-110" style="color:#ffffff"></i>
+												</span>
+											</div>
+										</span>
+									</div>
+								</td>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right red"></i> 거래처</th>
+								<td class="col-xs-5">
+									<div class="input-group">
+										<span class="input-icon input-icon-right">
+											<div class="input-group">
+												<input type="hidden" name="account_cd" id="account_cd" value='<?=$t->account_cd?>' readonly />
+												<input type="text" name="account_nm" id="account_nm"  onclick="centerOpenWindow('views/popup/accountList.php', '거래처리스트', 600, 500)" value='<?=$t->account_nm?>' readonly />
+												<span class="input-group-addon btn-purple"  style="cursor:pointer" onclick="centerOpenWindow('views/popup/accountList.php', '거래처리스트', 600, 500)">
+													<i class="ace-icon fa fa-search icon-on-right bigger-110" style="color:#ffffff"></i>
+												</span>
+											</div>
+										</span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 담당자</th>
+								<td class="col-xs-5"><input type="text" name="manager" id="manager" value='<?=$t->manager?>' /> * 거래처 담당자</td>
+								<!--
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right red"></i> 출하창고</th>
+								<td class="col-xs-5">
+									<span class="input-icon input-icon-right">
+										<div class="input-group">
+											<input type="hidden" name="warehouse_cd" id="warehouse_cd" value='<?=$t->warehouse_cd?>' />
+											<input type="text" name="warehouse_nm" id="warehouse_nm" onclick="centerOpenWindow('views/popup/warehouseList.php', '창고리스트', 600, 500)" value='<?=$t->warehouse_nm?>' readonly/>
+											<span class="input-group-addon btn-purple" style="cursor:pointer" onclick="centerOpenWindow('views/popup/warehouseList.php', '창고리스트', 600, 500)">
+												<i class="ace-icon fa fa-search icon-on-right bigger-110" style="color:#ffffff"></i>
+											</span>
+										</div>
+									</span>
+								</td>
+								-->
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 첨부</th>
+								<td colspan="3" class="col-xs-11"><input type="file" name="attach" id="attach" /></td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1">거래유형</th>
+								<td class="col-xs-5">
+									<select name="tax_type" id="tax_type" onchange="tax_calculation(this.value)">
+										<option value="1" <? if($t->tax_type == 1) echo "selected"; ?>>부가세율 적용</option>
+										<option value="2" <? if($t->tax_type == 2) echo "selected"; ?>>부가세율 미적용</option>
+									</select>
+								</td>
+								<th class="col-xs-1" style="background-color:#f1f1f1">통화</th>
+								<td class="col-xs-5">
+									<select name="currency" id="currency">
+										<option value="1" <? if($t->currency == 1) echo "selected"; ?>>내자</option>
+										<option value="2" <? if($t->currency == 2) echo "selected"; ?>>달러</option>
+										<option value="3" <? if($t->currency == 3) echo "selected"; ?>>바트</option>
+										<option value="4" <? if($t->currency == 4) echo "selected"; ?>>엔화</option>
+										<option value="5" <? if($t->currency == 5) echo "selected"; ?>>위안</option>
+										<option value="6" <? if($t->currency == 6) echo "selected"; ?>>유로</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 프로젝트</th>
+								<td class="col-xs-5">
+									<div class="input-group">
+										<span class="input-icon input-icon-right">
+											<div class="input-group">
+												<input type="hidden" name="project_cd" id="project_cd" value='<?=$t->project_cd?>' readonly />
+												<input type="text" name="project_nm" id="project_nm" onclick="centerOpenWindow('views/popup/projectList.php', '프로젝트리스트', 600, 500)" value='<?=$t->project_nm?>' readonly />
+												<span class="input-group-addon btn-purple" onclick="centerOpenWindow('views/popup/projectList.php', '프로젝트리스트', 600, 500)">
+													<i class="ace-icon fa fa-search icon-on-right bigger-110" style="color:#ffffff"></i>
+												</span>
+											</div>
+										</span>
+									</div>
+								</td>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 참조</th>
+								<td class="col-xs-5"><input type="text" name="refer" id="refer" value='<?=$t->refer?>'/></td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 결제조건</th>
+								<td class="col-xs-5"><input type="text" name="payment_condition" id="payment_condition" value='<?=$t->payment_condition?>'/></td>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right red"></i> 납품기한</th>
+								<td class="col-xs-5">
+									<div>
+										<span class="input-icon input-icon-right">
+											<div class="input-group">
+												<input class=" date-picker" name="delivery_dt" id="delivery_dt" type="text" data-date-format="yyyy-mm-dd" value='<?=$t->delivery_dt?>'/>
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+											</div>
+										</span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right red"></i> 연락처</th>
+								<td class="col-xs-5"><input type="text" name="mobile" id="mobile" value='<?=$t->mobile?>'/></td>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right red"></i> 출하예정일</th>
+								<td class="col-xs-5">
+									<div>
+										<span class="input-icon input-icon-right">
+											<div class="input-group">
+												<input class=" date-picker" name="consignment_dt" id="consignment_dt" type="text" data-date-format="yyyy-mm-dd" value='<?=$t->consignment_dt?>'/>
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+											</div>
+										</span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 주소</th>
+								<td class="col-xs-11" colspan="3" >
+									<div class="input-group col-xs-2">
+										<input type="text" class="search-query form-control" placeholder="우편번호" name="zipcode" id="zipcode" style="width:100px" value='<?=$t->zipcode?>' readonly />
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-purple btn-sm form-control" onclick="sample6_execDaumPostcode(1)">
+												<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+												우편번호검색
+											</button>
+										</span>
+									</div>
+									<div style="margin-top:5px">
+										<input type="text" class="search-query form-control" placeholder="주소" name="address" id="address" style="width:50%" value='<?=$t->address?>'/>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th class="col-xs-1" style="background-color:#f1f1f1"><i class="ace-icon fa fa-caret-right blue"></i> 비고</th>
+								<td colspan="3" class="col-xs-11"><textarea name="remark" id="remark" class="form-control col-xs-2" rows="1" style="width:70%"><?=$t->remark?></textarea></td>
+							</tr>
+						</table>
+						<?if($state!="출하완료" && $state!="종결"){?>
+						<!--<a class="btn btn-xs btn-success" onclick="centerOpenWindow('views/popup/shipmentItemList.php?mode=modify', '품목리스트', 800, 500)">품목추가</a>-->
+						<?}?>
+						<table id="product" class="table  table-bordered table-hover" style="margin-top:10px">
+							<thead>
+								<tr>
+									<!--<th class="detail-col center" style="background-color:#f1f1f1"></th>-->
+									<th class="center col-xs-2" style="background-color:#f1f1f1">품목코드</th>
+									<th class="center col-xs-2" style="background-color:#f1f1f1">품목명</th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1">규격</th>
+									<!--<th class="center col-xs-1" style="background-color:#f1f1f1">재질</th>-->
+									<th class="center col-xs-1" style="background-color:#f1f1f1">단위</th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1">출하수량</th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1">박스당수량</th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1">LOT_NO</th>
+									<th class="center col-xs-2" style="background-color:#f1f1f1">작업지시 번호</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+								<td colspan='11' class='center'>등록된 품목이 없습니다.</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<!--<th class="center" style="background-color:#f1f1f1"></th>-->
+									<th class="center col-xs-2" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+									<th class="center col-xs-2" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1"><SPAN class="cntTotal"></SPAN></th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+									<th class="center col-xs-1" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+									<th class="center col-xs-2" style="background-color:#f1f1f1"><SPAN>&nbsp;</SPAN></th>
+								</tr>
+							<tfoot>	
+						</table>
+					</form>
+				</div>
+			</div><!-- /.row -->
+			
+			<div class="clearfix form-actions center">
+				<div class="col-md-12">
+					<button class="btn" type="reset" onclick="window.parent.closeModal('<?=$dialogID?>');">
+						<i class="ace-icon fa fa-undo bigger-110"></i>
+						닫기
+					</button>
+				</div>
+			</div>
+<!--
+			<?if($state!="출하완료" && $state!="종결"){?>
+			</!-- submit --/>
+			<div class="clearfix form-actions center">
+				<div class="col-md-12">
+					</!--
+					<button class="btn btn-info" type="button" onclick="formSubmit()">
+						<i class="ace-icon fa fa-check bigger-110"></i>
+						등록
+					</button>
+					--/>
+					&nbsp; &nbsp; &nbsp;
+					
+					<button class="btn" type="reset" onclick="window.parent.closeModal('<?=$dialogID?>');">
+						<i class="ace-icon fa fa-undo bigger-110"></i>
+						닫기
+					</button>
+					
+				</div>
+			</div><!-- // submit --/>
+			<?}?>
+-->
+
+		</div><!-- /.page-content -->
+	</div>
+</div><!-- /.main-content -->
+
+<input type="hidden" name="flag" id="flag" value="1" />
+<!-- // 우편번호 찾기 ------------------------------------------------------------------------------------------------------->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+function sample6_execDaumPostcode(obj) {
+	new daum.Postcode({
+		oncomplete: function(data) {
+			// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+			// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+			// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+			var fullAddr = ''; // 최종 주소 변수
+			var extraAddr = ''; // 조합형 주소 변수
+
+			// 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+			if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+				fullAddr = data.roadAddress;
+			} else { // 사용자가 지번 주소를 선택했을 경우(J)
+				fullAddr = data.jibunAddress;
+			}
+
+			// 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+			if(data.userSelectedType === 'R'){
+				//법정동명이 있을 경우 추가한다.
+				if(data.bname !== ''){
+					extraAddr += data.bname;
+				}
+				// 건물명이 있을 경우 추가한다.
+				if(data.buildingName !== ''){
+					extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+				}
+				// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+				fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+			}
+			
+			if(obj == 1) {
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
+				document.getElementById('address').value = fullAddr;
+
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById('address').focus();
+			} else {
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('company_zipcode').value = data.zonecode; //5자리 새우편번호 사용
+				document.getElementById('company_address1').value = fullAddr;
+
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById('company_address2').focus();
+			}
+		}
+	}).open();
+ }
+ </script>
+<!-- // 우편번호 찾기 ------------------------------------------------------------------------------------------------------->
+<?
+require_once ("assets/include_script.php");
+?>
+
+<script>
+$(document).ready(function(){
+	var page = $("#page").val();
+	getOrderShipmentItem();
+});
+
+function centerOpenWindow(theURL, winName, width, height, fstate, scrollbars){ 
+	var features = "width=" + width ; 
+	features += ",height=" + height ; 
+	var state = ""; 
+	var scrollbars = scrollbars || "no"; 
+	var res_w = ( $(window).width() - width ) / 2; 
+	var res_h = ( $(window).height() - height ) / 2; 
+	if ( window.screenLeft >= window.screen.width ) { 
+		res_w = window.screen.width + res_w; 
+	} 
+	if (fstate == "") { // 옵션 
+		state = features + ", left=" + res_w + ",top=" + res_h + ",scrollbars=yes";
+	} else { 
+		state = fstate + ", " + features + ", left=" + res_w + ",top=" + res_h + ",scrollbars=yes";
+	} 
+	var win = window.open(theURL,winName,state); 
+	win.focus(); 
+} 
+
+function delTr(flag){
+	var tr = $(flag).parent().parent();
+	tr.remove();
+
+	var currentFlag = $("#flag").val();
+	var nextFlag = Number(currentFlag) - 1;
+	if(nextFlag < 4) {} else $("#flag").val(nextFlag);
+}
+
+
+
+function createOrderCode(){
+	var data_string = "mode=createOrderCode";
+	$.ajax({
+		type : "post",
+		url : "ajax/estimate.php",
+		data : data_string,
+		success : function(str) {
+			$("#order_cd").val(str);
+		}
+	});
+}
+/******************************************************************************************************
+:: 부가세 계산
+******************************************************************************************************/
+// 거래유형 선택에 따른 부가세 계산
+function tax_calculation(tax_type){
+	var cnt = new Array();
+	var unit_price = new Array();
+	var supply_price = new Array();
+	var tax = new Array();
+	var hap = new Array();
+
+	var re_unit_price = new Array();
+	var re_supply_price = new Array();
+	var re_tax = new Array();
+	var total = new Array();
+	var values = 0;
+
+	$.each($(".cnt") , function () {
+		cnt.push(removeComma($(this).val()));
+	});
+
+	$.each($(".unit_price") , function () {
+		unit_price.push(removeComma($(this).val()));
+	});
+
+	$.each($(".supply_price") , function () {
+		supply_price.push(removeComma($(this).val()));
+	});
+
+	$.each($(".tax") , function () {
+		tax.push(removeComma($(this).val()));
+	});
+
+	for(var i = 0 ; i < cnt.length ; i++) {
+		if(cnt[i] > 0) {
+			// 수량 * 판매단가
+			values = Number(removeComma(cnt[i])) * Number(removeComma(unit_price[i]));
+
+			// 부가세적용
+			if(tax_type == 1) {
+				// 공급가
+				var supply_price = values/1.1;
+				// 부가세
+				var cal_tax = values-supply_price;
+				// 합계금액
+				var re_hap = values + cal_tax;
+				
+				re_unit_price.push(values);
+				re_supply_price.push(supply_price);
+				re_tax.push(cal_tax);
+				total.push(values);
+			} else { // 부가세 미적용
+				// 공급가
+				var supply_price = values;
+				// 부가세
+				var cal_tax = 0;
+				// 합계금액
+				var re_hap = values;
+
+				
+				re_unit_price.push(values);
+				re_supply_price.push(supply_price);
+				re_tax.push(cal_tax);
+				total.push(values);
+			}
+		}
+	}
+
+	for (var i = 0 ; i < cnt.length ; i++)
+	{
+		if(removeComma(total[i]) > 0) {
+			$(".supply_price").eq(i).val(commaSplit(Math.round(re_supply_price[i])));
+			$(".tax").eq(i).val(commaSplit(Math.round(re_tax[i])));
+			$(".total_price").eq(i).val(commaSplit(Math.round(total[i])));
+		}
+	}
+}
+
+// 공급가액 계산
+function calculation(flag) {
+	var tax_type = $("#tax_type option:selected").val();
+	var cnt = $("#cnt_" + flag).val();
+	var unit_price = removeComma($("#unit_price_" + flag).val());
+	//var tariff = $("#tariff_" + flag).val();
+	//var adjustments = Number(unit_price) * Number(tariff);
+	var values = Number(removeComma(cnt)) * Number(removeComma(unit_price));
+	//var values = Number(removeComma(cnt)) * Number(removeComma(adjustments));
+
+	//$("#adjustments_" + flag).val(commaSplit(adjustments));
+
+	// 부가세적용
+	if(tax_type == 1) {
+		//var supply_price = values/1.1;
+		var supply_price = values
+		var tax = supply_price*0.1;
+		$("#supply_price_" + flag).val(commaSplit(Math.round(supply_price)));
+		$("#total_price_" + flag).val(commaSplit(Math.round(values + tax)));
+	} else {
+		var tax = 0;
+		//var tax = values-supply_price;
+		$("#supply_price_" + flag).val(commaSplit(Math.round(values)));
+		$("#total_price_" + flag).val(commaSplit(Math.round(values + tax)));
+	}
+	$("#tax_" + flag).val(commaSplit(Math.round(tax)));
+
+	/*if ($("input[name='cnt[]']").length > 0) {
+		var debtorTotal = 0;
+
+		$("input[name='cnt[]']").each(function () {
+			var cnt = Money2Num($(this).val());
+			if (debtor != "" && !isNaN(debtor))
+				debtorTotal = debtorTotal + parseInt(debtor, 10);
+		});
+
+		$(".debtorTotal").html(Num2Money(debtorTotal));
+		$("#creditor_" + flag).val("0");
+		
+		var dcTotalPriceRe = (removeComma($(".debtorTotal").text()) -removeComma($(".creditorTotal").text()));
+		//alert(dcTotalPriceRe)
+		$(".remarkAmount").html(Num2Money(dcTotalPriceRe));
+		alert(removeComma($(".debtorTotal").text()))
+		$("#totalprice").val(removeComma($(".debtorTotal").text()));
+	}
+	*/
+}
+function  calculationTotal(flag) {
+	var cntTotal = 0;
+	$("input[name='cnt[]']").each(function () {
+		var cnt = removeComma(this.value);
+		if ($("input[name='cnt[]']").length > 0 && !isNaN(cnt)){
+			 cntTotal += Number(removeComma(this.value));
+		}
+	});
+	var unitPriceTotal = 0;
+	$("input[name='unit_price[]']").each(function () {
+		var unit_price = removeComma(this.value);
+		if ($("input[name='unit_price[]']").length > 0 && !isNaN(unit_price)){
+			 unitPriceTotal += Number(removeComma(this.value));
+		}
+	});
+	var supplyPriceTotal = 0;
+	$("input[name='supply_price[]']").each(function () {
+		var supply_price = removeComma(this.value);
+		if ($("input[name='supply_price[]']").length > 0 && !isNaN(supply_price)){
+			 supplyPriceTotal += Number(removeComma(this.value));
+		}
+	});
+	var taxTotal = 0;
+	$("input[name='tax[]']").each(function () {
+		var tax = removeComma(this.value);
+		if ($("input[name='tax[]']").length > 0 && !isNaN(tax)){
+			 taxTotal += Number(removeComma(this.value));
+		}
+	});
+	var priceTotal = 0;
+	$("input[name='total_price[]']").each(function () {
+		var total_price = removeComma(this.value);
+		if ($("input[name='total_price[]']").length > 0 && !isNaN(total_price)){
+			 priceTotal += Number(removeComma(this.value));
+		}
+	});
+		$(".cntTotal").html(Num2Money(cntTotal));
+		$(".unitPriceTotal").html(Num2Money(unitPriceTotal));
+		$(".supplyPriceTotal").html(Num2Money(supplyPriceTotal));
+		$(".taxTotal").html(Num2Money(taxTotal));
+		$(".priceTotal").html(Num2Money(priceTotal));
+
+
+}
+
+function commaSplit(n) {// 콤마 나누는 부분
+	var txtNumber = '' + n;
+	var rxSplit = new RegExp('([0-9])([0-9][0-9][0-9][,.])');
+	var arrNumber = txtNumber.split('.');
+	arrNumber[0] += '.';
+	do {
+		arrNumber[0] = arrNumber[0].replace(rxSplit, '$1,$2');
+	}
+	while (rxSplit.test(arrNumber[0]));
+	if(arrNumber.length > 1) {
+		return arrNumber.join('');
+	} else {
+		return arrNumber[0].split('.')[0];
+	}
+}
+
+function removeComma(n) {  // 콤마제거
+	if ( typeof n == "undefined" || n == null || n == "" ) {
+		return "";
+	}
+	var txtNumber = '' + n;
+	return txtNumber.replace(/(,)/g, "");
+}
+
+function getOrderOne() {
+	var uid = $("#order_uid").val();
+	$.getJSON("ajax/order.php",{"mode":"getOrderOne", "uid" : uid},
+		function(json){
+			if(json != null) {
+				$("#account_cd").val(json.account_cd);
+				$("#account_nm").val(json.account_nm);
+				$("#manager").val(json.manager);
+				$("#project_cd").val(json.project_cd);
+				$("#project_nm").val(json.project_nm);
+				$("#payment_condition").val(json.payment_condition);
+				$("#warehouse_cd").val(json.warehouse_cd);
+				$("#warehouse_nm").val(json.warehouse_nm);
+				$("#remark").val(json.remark);
+				$("#refer").val(json.refer);
+				$("#tax_type > option[value=" + json.tax_type + "]").attr("selected", "true");
+				$("#currency > option[value=" + json.currency + "]").attr("selected", "true");
+				$("#delivery_dt").val(json.delivery_dt);
+			}
+		}
+	);
+}
+/*
+function getOrderItem(){
+	getOrderOne();
+	var uid = $("#order_uid").val();
+	var flag = $("#flag").val();
+	
+	$.getJSON("ajax/order.php",{"mode":"getOrderItem", "uid" : uid},
+		function(json){
+			if(json != null) {
+				for(var i = 0 ; i < json.length ; i++){
+					var tag = "";
+					tag += "<tr class='item" + flag + "'>";
+					tag += "<td class='center'><i class='delBtn fa fa-minus-square fa-2x' aria-hidden='true' onclick='delTr(this)'></i></td>";
+					tag += "<td><input type='text' class='form-control id-btn-dialog item_cd ' name='item_cd[]' id='item_cd_" + flag + "' onclick='viewModal(), itemFlag(" + flag + ")'  value='" + json[i].item_cd + "' readonly /></td>";
+					tag += "<td><input type='text' class='form-control' name='item_nm[]' id='item_nm_" + flag + "' value='" + json[i].item_nm + "' readonly /></td>";
+					tag += "<td><input type='text' class='form-control' name='standard1[]' id='standard1_" + flag + "' value='" + json[i].standard1 + "' onkeyup='calculation(" + flag + ")' readonly/></td>";
+					//tag += "<td><input type='text' class='form-control' name='material[]' id='material_" + flag + "' value='" + json[i].material + "' onkeyup='calculation(" + flag + ")' readonly/></td>";
+					tag += "<td><input type='text' class='form-control' name='unit[]' id='unit_" + flag + "' value='" + json[i].unit + "' onkeyup='calculation(" + flag + ")' readonly/></td>";
+					tag += "<td><input type='text' class='form-control cnt text-right' name='cnt[]' id='cnt_" + flag + "' value='" + json[i].cnt + "' onkeyup='calculation(" + flag + ")' onkeyup='calculation(" + flag + ");input_comma(this);' onclick='this.select();' onblur='calculationTotal(" + flag + ");' /></td>";
+					tag += "<td><input type='text' class='form-control' name='remain_cnt[]' id='remain_cnt_" + flag + "' value='" + json[i].remain_cnt + "'  /></td>";
+					tag += "<td><input type='text' class='form-control' name='remark[]' id='remark_" + flag + "' value='" + json[i].remark + "'  /></td>";
+					tag += "</tr>";
+					
+					flag = Number(flag) + 1;
+					$("#flag").val(flag);
+				}
+			}	
+				$("#product tbody").html(tag);
+				calculationTotal();
+		}
+	);	
+}
+
+*/
+function getOrderShipmentItem(){
+	$(document).find("#product tbody").empty();
+	var uid = $("#uid").val();
+	var flag = $("#flag").val();
+	var tag = "";
+	$.getJSON("ajax/sales.php",{"mode":"getOrderShipmentItem2", "uid" : uid},
+		function(json){
+			if(json != null) {
+				for(var i = 0 ; i < json.length ; i++){
+					tag += "<tr class='item" + flag + "'>";
+					//tag += "<td class='center'><i class='delBtn fa fa-minus-square fa-2x' aria-hidden='true' onclick='delTr(this)'></i></td>";
+					tag += "<td><input type='text' class='form-control id-btn-dialog item_cd ' name='item_cd[]' id='item_cd_" + flag + "' onclick='viewModal(), itemFlag(" + flag + ")'  value='" + json[i].item_cd + "' readonly /></td>";
+					tag += "<td><input type='text' class='form-control' name='item_nm[]' id='item_nm_" + flag + "' value='" + json[i].item_nm + "' readonly /></td>";
+					tag += "<td><input type='text' class='form-control' name='standard1[]' id='standard1_" + flag + "' value='" + json[i].standard1 + "' onkeyup='calculation(" + flag + ")' readonly/></td>";
+					//tag += "<td><input type='text' class='form-control' name='material[]' id='material_" + flag + "' value='" + json[i].material + "' onkeyup='calculation(" + flag + ")' readonly/></td>";
+					tag += "<td><input type='text' class='form-control' name='unit[]' id='unit_" + flag + "' value='" + json[i].unit + "' onkeyup='calculation(" + flag + ")' readonly/></td>";
+					tag += "<td><input type='text' class='form-control cnt text-right' name='cnt[]' id='cnt_" + flag + "' value='" + json[i].cnt + "' onkeyup='calculation(" + flag + ")' onkeyup='calculation(" + flag + ");input_comma(this);' onclick='this.select();' onblur='calculationTotal(" + flag + ");' readonly/></td>";
+					//tag += "<td><input type='text' class='form-control text-right' name='remain_cnt[]' id='remain_cnt_" + flag + "' value=''  readonly/></td>";
+					tag += "<td><input type='text' class='form-control text-right' name='box_cnt[]' id='box_cnt_" + flag + "' value='" + json[i].box_cnt + "'  readonly/></td>";
+					//tag += "<td><input type='text' class='form-control' name='remark[]' id='remark_" + flag + "' value='" + json[i].remark + "'  /></td>";
+					tag += "<td><input type='text' class='form-control lot_no' name='lot_no_cd[]' id='lot_no_cd_" + flag + "' onclick=\"lotnocdFlag2(" + flag + ");lot_no_reg(" + flag + ",'"+ json[i].item_cd +"','"+ json[i].standard1 +"','"+ json[i].remain_cnt +"')\" value='"+ json[i].lot_no_cd +"' readonly /><input type='hidden' name='lot_no_nm[]'  id='lot_no_nm_" + flag + "' value='"+ json[i].lot_no_nm +"' /></td>";
+					
+					tag +="<td> <input type='text' name='work_cd[]'  id='work_cd_" + flag + "' value='"+ json[i].work_cd +"' readonly/> <input type='hidden' name='warehouse_nm[]'  id='warehouse_nm_" + flag + "' value='"+ json[i].warehouse_nm +"' readonly/><input type='hidden' name='warehouse_cd[]'  id='warehouse_cd_" + flag + "'  value='"+ json[i].warehouse_cd +"' readonly/></td>";
+					tag += "</tr>";
+					
+					flag = Number(flag) + 1;
+					$("#flag").val(flag);
+				}
+			}
+				$("#product tbody").html(tag);
+				calculationTotal();
+		});	
+}
+
+
+function formSubmit(){
+
+	//if(!check_str($("#order_dt").val(),"주문일자")) return false;
+	if(!check_str($("#account_cd").val(),"거래처")) return false;
+	//if(!check_str($("#project_cd").val(),"프로젝트")) return false;
+	if(!check_str($("#delivery_dt").val(),"닙품기한")) return false;
+	
+	/*
+	if($("#account_nm").val() == "") {
+		alert("거래처를 추가 하세요");
+		$("#account_nm").focus();
+		return false;
+	}
+	*/
+	if($("#warehouse_nm").val() == "") {
+		alert("출하창고를 선택하세요");
+		$("#warehouse_nm").focus();
+		return false;
+	}
+
+	if($("#manager").val() == "") {
+		alert("거래처 담당자를 선택하세요");
+		$("#manager").focus();
+		return false;
+	}
+
+	if($("#mobile").val() == "") {
+		alert("연락처를 입력 하세요");
+		$("#mobile").focus();
+		return false;
+	}
+
+	if($("#consignment_dt").val() == "") {
+		alert("출하예정일을 입력 하세요");
+		$("#consignment_dt").focus();
+		return false;
+	}
+
+	if($("#address").val() == "") {
+		alert("주소를 입력 하세요");
+		$("#address").focus();
+		return false;
+	}
+	
+	if(!frm_submit($('input[name="cnt[]"]'),"수량")) return false;
+	if(!frm_submit($('input[name="unit_price[]"]'),"판매단가")) return false;
+	
+	$("#cntTotal").val($(".cntTotal").html());
+	$("#unitPriceTotal").val($(".unitPriceTotal").html());
+	$("#supplyPriceTotal").val($(".supplyPriceTotal").html());
+	$("#taxTotal").val($(".taxTotal").html());
+	$("#priceTotal").val($(".priceTotal").html());
+
+	$("#frm").submit();
+}
+
+function frm_submit(f,t) {
+	  var ret = true;
+	  $(f).each(function(idx, item) {
+		if(!$(item).val() || $(item).val()=="0") {
+		  ret = false;
+		  alert(t+"을 입력 하세요");
+		  $(item).focus();
+		  return false;
+		}
+	  });
+	  return ret;
+}
+//-----------------------------------------------------------------------
+// 기  능 : 숫자를 금액 형식으로
+//-----------------------------------------------------------------------
+function Num2Money(number){
+
+	number		=	Money2Num(number);
+
+	if(isNaN(number))			return number;
+	if(parseFloat(number)==0)	return 0;
+	if(!number)					return "";
+	var strint="";
+	var strfloat="";
+	var tmp;
+	var ans="";
+	var isfloat=false;
+	var minus=false;
+	var result='';
+
+	if(number.indexOf("-")>-1){
+		minus=true;
+		number=number.replace('-','');
+	}
+
+	if(number.indexOf(".")==-1) strint=number;
+	else {
+		isfloat=true;
+		strint=number.substring(0,number.indexOf("."));
+		if(parseInt(strint,10)==0)	strint = '0';
+		strfloat=number.substring(number.indexOf("."),number.length);
+	}
+
+	if(!isNaN(strint) && strint!=""){
+		strint	=	String(parseInt(strint,10));
+	}
+
+	var num=strint.split("");
+
+	tmp=num.reverse();
+
+	for(a=0;a<tmp.length;a++) {
+		if(!(a%3) && a!=0) { ans+=",";  }
+		ans+=tmp[a];
+	}
+
+	tmp=ans.split("").reverse();
+	ans="";
+
+	for(a=0;a<tmp.length;a++){ ans+=tmp[a];}
+
+	for(a=0;a<2;a++)
+		if(ans.charAt(0)=="0" || ans.charAt(0)==",") ans=ans.substring(1,ans.length);
+
+	result=ans+strfloat;
+
+	if(isfloat==true){
+		var lastchar=result.substr(result.length-1,1);
+		while (lastchar == '0' || lastchar == '.'){
+			result = result.substr(0,result.length-1);
+			if (lastchar == '.'){break;}
+			lastchar=result.substr(result.length-1,1);
+		}
+	}
+
+	var tmpresult = parseFloat(Money2Num(result));
+
+	if(tmpresult>0 && tmpresult<1){
+		result = '0'+result;
+	}
+
+	return	(minus==true) ? '-'+result : result
+}
+//-----------------------------------------------------------------------
+// 기  능 : 금액을 숫자 형식으로
+//-----------------------------------------------------------------------
+function Money2Num(money) {
+	if(money == undefined)	return false;
+	var moneyString		=	new String;
+	moneyString			=	money.toString();
+	while (moneyString.indexOf(',') > -1){
+		moneyString	=	moneyString.replace(',','');
+	}
+	if(isNaN(moneyString)){
+		return false;
+	}else{
+		return moneyString;
+	}
+}
+function commaSplit(n) {// 콤마 나누는 부분
+	var txtNumber = '' + n;
+	var rxSplit = new RegExp('([0-9])([0-9][0-9][0-9][,.])');
+	var arrNumber = txtNumber.split('.');
+	arrNumber[0] += '.';
+	do {
+		arrNumber[0] = arrNumber[0].replace(rxSplit, '$1,$2');
+	}
+	while (rxSplit.test(arrNumber[0]));
+	if(arrNumber.length > 1) {
+		return arrNumber.join('');
+	} else {
+		return arrNumber[0].split('.')[0];
+	}
+}
+
+function removeComma(n) {  // 콤마제거
+	if ( typeof n == "undefined" || n == null || n == "" ) {
+		return "";
+	}
+	var txtNumber = '' + n;
+	return txtNumber.replace(/(,)/g, "");
+}
+function input_comma(sfield) 
+	{
+		if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) 
+			|| (event.keyCode == 188) || (event.keyCode == 190) || (event.keyCode == 110) || (event.keyCode == 8) || (event.keyCode == 46))
+		{			
+			sfield.value = remove_comma(sfield);
+			money = sfield.value;
+			var tmpH="";
+			if(money.charAt(0)=="-")
+			{
+				tmpH=money.substring(0,1);
+				money=money.substring(1,money.length);
+			}
+		
+			for (; money.indexOf("-") != -1 ;) 
+			{ 
+				money = money.replace("-","")
+			}
+		
+			belowzero = "";
+			if (check_dot(money)==true)
+			{
+				arr = money.split(".");
+				money = arr[0];		
+				belowzero = "." + arr[1];    
+			}
+			
+			len = money.length ;
+			result ="";
+			for (i=0; i < len;i++)
+			{
+				comma="";
+				schar = money.charAt(i);
+				where = len - 1 - i;
+				if ( ( where % 3 == 0) && (len > 3) && ( where != 0 )) 
+				{
+					comma = ",";	
+				}
+				result = result +   schar + comma ;
+			}
+			if(tmpH)
+			{
+ 				result = tmpH + result;
+	 		}
+
+			sfield.value = result + belowzero;			
+			
+	   	}	
+		return true;
+	}
+
+	function remove_comma(sfield)
+	{
+		money = sfield.value;
+		var arr;
+		arr = money.split(",");
+		len = arr.length;	
+		result = "";
+		for (k=0; k < len; k++) 
+		{
+			result = result + arr[k];
+		}
+		return result;
+	}	
+
+	function check_dot(v_value)
+	{
+		v_len= v_value.length;
+		for (var i=0; i< v_len; i++) 
+		{
+			schar = v_value.charAt(i);
+			if (schar == "." )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+		
+	function onlyNumber() //onKeyPress 이벤트 기준
+	{ 
+  		if ( ((event.keyCode < 48) || (57 < event.keyCode) && (188 != event.keyCode)) && (45 != event.keyCode) 
+  			&& (190 != event.keyCode) && (110 != event.keyCode) && (109 != event.keyCode) && (46 != event.keyCode)) 
+  		{
+  			event.returnValue=false;
+  		}
+	}
+
+
+</script>
+
+<!----------------------------------------------------------------------------------------------------------------------->
+<script type="text/javascript">
+jQuery(function($) {
+	$.mask.definitions['~']='[+-]';
+	$('.input-mask-date').mask('99/99/9999');
+	$('.input-mask-phone').mask('(999) 999-9999');
+	$('.input-mask-eyescript').mask('~9.99 ~9.99 999');
+	$(".input-mask-product").mask("a*-999-a999",{placeholder:" ",completed:function(){alert("You typed the following: "+this.val());}});
+
+	//override dialog's title function to allow for HTML titles
+	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+		_title: function(title) {
+			var $title = this.options.title || '&nbsp;'
+			if( ("title_html" in this.options) && this.options.title_html == true )
+				title.html($title);
+			else title.text($title);
+		}
+	}));
+	
+
+	
+	//datepicker plugin
+	//link
+	$('.date-picker').datepicker({
+		autoclose: true,
+		todayHighlight: true,
+		language: "kr"
+	})
+	//show datepicker when clicking on the icon
+	.next().on(ace.click_event, function(){
+		$(this).prev().focus();
+	});
+			
+	//or change it into a date range picker
+	$('.input-daterange').datepicker({autoclose:true});
+			
+			
+	//to translate the daterange picker, please copy the "examples/daterange-fr.js" contents here before initialization
+	$('input[name=date-range-picker]').daterangepicker({
+		'applyClass' : 'btn-sm btn-success',
+		'cancelClass' : 'btn-sm btn-default',
+		locale: {
+			applyLabel: 'Apply',
+			cancelLabel: 'Cancel',
+		}
+	})
+	.prev().on(ace.click_event, function(){
+		$(this).next().focus();
+	});
+			
+	$('#timepicker1').timepicker({
+		minuteStep: 1,
+		showSeconds: true,
+		showMeridian: false,
+		disableFocus: true,
+		icons: {
+			up: 'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		}
+	}).on('focus', function() {
+		$('#timepicker1').timepicker('showWidget');
+	}).next().on(ace.click_event, function(){
+		$(this).prev().focus();
+	});
+				
+	if(!ace.vars['old_ie']) $('#date-timepicker1').datetimepicker({
+		 //format: 'MM/DD/YYYY h:mm:ss A',//use this option to display seconds
+		 icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up: 'fa fa-chevron-up',
+			down: 'fa fa-chevron-down',
+			previous: 'fa fa-chevron-left',
+			next: 'fa fa-chevron-right',
+			today: 'fa fa-arrows ',
+			clear: 'fa fa-trash',
+			close: 'fa fa-times'
+		}
+	}).next().on(ace.click_event, function(){
+		$(this).prev().focus();
+	});
+});
+</script>
+<!----------------------------------------------------------------------------------------------------------------------->

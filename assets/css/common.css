@@ -1,0 +1,11 @@
+.cf 
+{
+	color : red;
+	font-weight: bold;
+}
+
+.summary {
+	margin-left: 15px;
+	font-size: 10pt;
+	color : #1da6c3;
+}

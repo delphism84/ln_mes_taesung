@@ -1,0 +1,778 @@
+<div class="main-content">
+	<div class="main-content-inner">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li>
+					<i class="ace-icon fa fa-home home-icon"></i>
+					<a href="#">Home</a>
+				</li>
+
+				<li>
+					<a href="#">인사/급여</a>
+				</li>
+				<li class="active">급여관리</li>
+			</ul><!-- /.breadcrumb -->
+
+			<div class="nav-search" id="nav-search">
+				<form class="form-search">
+					<span class="input-icon">
+						<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+						<i class="ace-icon fa fa-search nav-search-icon"></i>
+					</span>
+				</form>
+			</div><!-- /.nav-search -->
+		</div>
+
+		<div class="page-content">
+			<!-- 서브제목과 라인 -->
+			<div class="page-header">
+				<h1>
+					급여대장
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						급여대장.
+					</small>
+				</h1>
+			</div><!-- /.page-header -->
+			<!--// 서브제목과 라인 -->
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<!-- 테이블 -->
+				<div id="idPrint">
+                <style type="text/css">
+                .insa th{font-weight:normal; padding:2px 1px 2px 1px;}
+                .insa td{padding:2px 2px 2px 0px; border-right:1px solid #999; border-bottom:1px solid #999;}
+                tr.bottom_line th,
+                tr.bottom_line td{border-bottom:2px solid #036;}
+                tr td.right_line{border-right:1px solid #036;}
+                tfoot.border_line tr td{background:#EEF1F6; border:1px solid #036;}
+                .gray_bg td{background-color:#f7f7f7;}
+                </style>
+                <div id="contents" style="width: 100%;">
+                <div id="print_title"><p class="center">
+				<table class="table">
+				<tr>
+				<td align='center' class='big5'><h3>2017년 12월 급여</h3></td></tr>
+				</table>
+				</p>
+				</div>
+				<div class="row">
+				<p class="float_left">회사명 :  주식회사 선정테크</p>
+				<p class="float_right">지급일자 : 2018/01/22</p>
+				</div>
+				<table class="table  table-bordered table-hover" summary="" class="insa">
+				<tr>
+				<th class="center col-xs-1" width="80" style="background-color:#f1f1f1">
+				<input view="N" type="checkbox" id="chkAll" name="chkAll" checked onclick="AllCheck(this);" /> 성명</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">기본급</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1" colspan="2">잔업수당</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1" colspan="2">특근수당</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1" colspan="2">특근잔업</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">육아수당</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">소득세</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">주민세</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">국민연금</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">건강보험</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">고용보험</th>
+				</tr>
+				<tr>
+				<th class="center col-xs-1" width="80" style="background-color:#f1f1f1">사번</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">직급수당</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1" colspan="2">식대</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1" colspan="2">차량유지비</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1" colspan="2">상여</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">&nbsp;</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">장기요양</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">연말정산</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">사우회비</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">공제항목 추가가능</th>
+				<th class="center col-xs-1" style="background-color:#f1f1f1">&nbsp;</th>
+				</tr>
+				<tr class="bottom_line">
+				<th width="80">직급</th>
+				<th width="104">&nbsp;</th>
+				<th width="104" colspan="2">&nbsp;</th>
+				<th width="104" colspan="2">&nbsp;</th>
+				<th width="104" colspan="2">&nbsp;</th>
+				<th width="104"><strong>지급총액</strong></th>
+				<th width="78">&nbsp;</th>
+				<th width="78">&nbsp;</th>
+				<th width="78">&nbsp;</th>
+				<th width="78"><strong>공제총액</strong></th>
+				<th width="78"><strong>실지급액</strong></th>
+				</tr>
+				<tr >
+				<td width="80" class="left"><input view="N" type="checkbox" id="chkRow" name="chkRow" value="134" checked>은지원<br /></td>
+				<td width="104" class="right"  >2,000,000</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >21,570</td>
+				<td width="78" class="right"  >2,150</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				</tr>
+				<tr >
+				<td width="80" class="left"  style="backgroung-color:#000"><a href="#" onclick="javascript:fnDetail('11', '201712', '0', '2017년 12월 급여', '134');return false;" class="list_link">134</a></td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				</tr>
+				<tr class='bottom_line'>
+				<td width="80" class="left"></td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  ><strong>2,000,000</strong></td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  ><strong>23,720</strong></td>
+				<td width="78" class="right"  ><strong>1,976,280</strong></td>
+				</tr>
+				<tr class='gray_bg'>
+				<td width="80" class="left"><input view="N" type="checkbox" id="chkRow" name="chkRow" value="001" checked>홍길동<br /></td>
+				<td width="104" class="right ico_tooltip"  onmouseover="try{showTooltip('dHTMLToolTip',event, '연봉직', '003366','000000','#ffffff','40000');}catch(ex){}" onmouseout="try{hideTooltip('dHTMLToolTip');}catch(ex){}" >1,500,000</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >10,640</td>
+				<td width="78" class="right"  >1,060</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				</tr><tr class='gray_bg'><td width="80" class="left"  style="backgroung-color:#000"><a href="#" onclick="javascript:fnDetail('11', '201712', '0', '2017년 12월 급여', '001');return false;" class="list_link">001</a></td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				</tr>
+				<tr class='gray_bg bottom_line'>
+				<td width="80" class="left">사원</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  ><strong>1,500,000</strong></td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  ><strong>11,700</strong></td>
+				<td width="78" class="right"  ><strong>1,488,300</strong></td>
+				</tr>
+				<tr >
+				<td width="80" class="left"><input view="N" type="checkbox" id="chkRow" name="chkRow" value="005" checked>이현구<br /></td>
+				<td width="104" class="right"  >2,000,000</td>
+				<td width="42" class="right"  >20.00</td>
+				<td width="62" class="right">100,000</td>
+				<td width="42" class="right"  >30.00</td>
+				<td width="62" class="right">100,000</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >25,860</td>
+				<td width="78" class="right"  >2,580</td>
+				<td width="78" class="right"  >157,500</td>
+				<td width="78" class="right"  >107,100</td>
+				<td width="78" class="right"  >22,750</td>
+				</tr>
+				<tr >
+				<td width="80" class="left"  style="backgroung-color:#000"><a href="#" onclick="javascript:fnDetail('11', '201712', '0', '2017년 12월 급여', '005');return false;" class="list_link">005</a></td>
+				<td width="104" class="right"  >90,000</td>
+				<td width="104" colspan="2" class="right"  >200,000</td>
+				<td width="104" colspan="2" class="right"  >200,000</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >7,010</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				</tr>
+				<tr class='bottom_line'>
+				<td width="80" class="left">사원</td>
+				<td width="104" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" colspan="2" class="right"  >&nbsp;</td>
+				<td width="104" class="right"  ><strong>2,690,000</strong></td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  >&nbsp;</td>
+				<td width="78" class="right"  ><strong>322,800</strong></td>
+				<td width="78" class="right"  ><strong>2,367,200</strong></td>
+				</tr>
+				<tr class='gray_bg'>
+				<td width="80">&nbsp;</td>
+				<td width="104">&nbsp;</td>
+				<td width="104" colspan="2">&nbsp;</td>
+				<td width="104" colspan="2">&nbsp;</td>
+				<td width="104" colspan="2">&nbsp;</td>
+				<td width="104">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				</tr>
+				<tr class='gray_bg bottom_line'>
+				<td width="80">&nbsp;</td>
+				<td width="104">&nbsp;</td>
+				<td width="104" colspan="2">&nbsp;</td>
+				<td width="104" colspan="2">&nbsp;</td>
+				<td width="104" colspan="2">&nbsp;</td>
+				<td width="104">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				<td width="78">&nbsp;</td>
+				</tr>
+				<tfoot class="border_line">
+				<tr>
+				<td width="80" rowspan="3" class="center"><strong>합계(3명)</strong></td>
+				<td width="104" class="right">5,500,000</td>
+				<td width="104" colspan="2" class="right">100,000</td>
+				<td width="104" colspan="2" class="right">100,000</td>
+				<td width="104" colspan="2" class="right">&nbsp;</td>
+				<td width="104" class="right">&nbsp;</td>
+				<td width="78" class="right">58,070</td>
+				<td width="78" class="right">5,790</td>
+				<td width="78" class="right">157,500</td>
+				<td width="78" class="right">107,100</td>
+				<td width="78" class="right">22,750</td>
+				</tr>
+				<tr>
+				<td width="104" class="right">90,000</td>
+				<td width="104" colspan="2" class="right">200,000</td>
+				<td width="104" colspan="2" class="right">200,000</td>
+				<td width="104" colspan="2" class="right">&nbsp;</td>
+				<td width="104" class="right">&nbsp;</td>
+				<td width="78" class="right">7,010</td>
+				<td width="78" class="right">&nbsp;</td>
+				<td width="78" class="right">&nbsp;</td>
+				<td width="78" class="right">&nbsp;</td>
+				<td width="78" class="right">&nbsp;</td>
+				</tr>
+				<tr>
+				<td width="104" class="right">&nbsp;</td>
+				<td width="104" colspan="2" class="right">&nbsp;</td>
+				<td width="104" colspan="2" class="right">&nbsp;</td>
+				<td width="104" colspan="2" class="right">&nbsp;</td>
+				<td width="104" class="right"><strong>6,190,000</strong></td>
+				<td width="78" class="right">&nbsp;</td>
+				<td width="78" class="right">&nbsp;</td>
+				<td width="78" class="right">&nbsp;</td>
+				<td width="78" class="right"><strong>358,220</strong></td>
+				<td width="78" class="right"><strong>5,831,780</strong></td>
+				</tr>
+				</tfoot>
+				</table>
+				<div class="row"><p class="float_left">[P. 1/1]</p><p class="float_right">2017-11-25 오후 5:54:26</p></div>
+                </div> <!-- //contents-->
+            </div><!-- //idPrint-->
+
+
+
+				</div>
+			</div><!-- /.row -->
+			<!-- submit -->
+			<div class="clearfix form-actions center">
+				<div class="col-md-12">
+					<div class="col-xs-6" style="text-align:left"><span id="paging_area"></span></div>
+					<div class="col-xs-6 right" style="text-align:right">
+						<!-- <button class="btn btn-info" type="button" onclick="location.href = 'index.php?controller=sales&action=inputPagestatement' "> -->
+						<button class="btn btn-info" type="button" onclick="payCheck_reg('0','0')">
+							<i class="ace-icon fa fa-check"></i>
+							등록
+						</button>
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn btn-danger" type="button" onclick="copySelect()">
+							<i class="ace-icon fa fa-undo"></i>
+							선택삭제
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn btn-danger" type="button" onclick="deleteSelect()">
+							<i class="ace-icon fa fa-undo"></i>
+							선택삭제
+						</button>
+					</div>
+				</div>
+			</div>
+		</div><!-- /.page-content -->
+	</div>
+</div><!-- /.main-content -->
+
+<input type="hidden" name="page" id="page" value="1" />
+<input type="hidden" name="search_txt" id="search_txt" value="" />
+<input type="hidden" name="where" id="where" value="" />
+<input type="hidden" name="account_type" id="account_type" value="" />
+
+
+
+<div id="id-btn-dialog1" class="modal fade" >
+    <div class="modal-dialog modal-lg" style="width:50%">
+        <div class="modal-content" >
+            <div class="modal-header" id="modal-header1">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">급여정보입력</h4>
+
+            </div>
+            <div class="modal-body">
+                <p><iframe src="" id="payCheck_reg_frame" frameborder="0" width="99%" height="670" marginwidth="0" marginheight="0" scrolling="yes"></iframe></p>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div id="id-btn-dialog2" class="modal fade" >
+    <div class="modal-dialog modal-lg" style="width:50%">
+        <div class="modal-content" >
+            <div class="modal-header" id="modal-header2">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">급여정보입력</h4>
+
+            </div>
+            <div class="modal-body">
+                <p><iframe src="" id="payCheck_modify_frame" frameborder="0" width="99%" height="670" marginwidth="0" marginheight="0" scrolling="yes"></iframe></p>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div id="id-btn-dialog3" class="modal fade" >
+    <div class="modal-dialog modal-lg" style="width:50%">
+        <div class="modal-content" >
+            <div class="modal-header" id="modal-header3">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">금액직접입력</h4>
+
+            </div>
+            <div class="modal-body">
+                <p><iframe src="" id="payCheckEmp_frame" frameborder="0" width="99%" height="670" marginwidth="0" marginheight="0" scrolling="yes"></iframe></p>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="assets/js/jquery-2.1.4.min.js"></script>
+
+<script>
+$(document).ready(function(){
+	var page = $("#page").val();
+	get_pay_check(page);
+	
+	$("#check-all").click(function(){
+		if($(this).is(":checked")) $(".chk").attr("checked",true);
+		else $(".chk").attr("checked",false);
+	});
+});
+
+function get_pay_check(page){
+	var table = "erp_pay_check";
+	var rpp = 15;
+	var adjacents = 4;
+	var tag = "";
+	var search_choice = $("#search_choice option:selected").val();
+	var txt = $("#search_txt").val();
+	var page = page;
+	var search = $("#where").val();
+	var pay_gubun = $("#pay_gubun").val();
+
+	$.getJSON("ajax/pay_check.php",{"page":page, "mode":"getPayCheck", "rpp" : rpp, "adjacents" : adjacents, "where":search, "pay_gubun":pay_gubun, "search_choice" : search_choice, "txt" : txt, "table" : table},
+		function(json){
+			if(json != null) {
+				$("#total_num").html(json[0].total_num);
+				for(var i = 0 ; i < json.length ; i++){
+					tag += "<tr>";
+					tag += "<td>";
+					tag += "<input type='checkbox' class='chk flat' name='table_records' value='" + json[i].uid + "'>";
+					tag += "</td>";
+					tag += "<td class='left'><a href='javascript:void(0);'  onclick='payCheck_modiy(" + json[i].uid + "," + json[i].aci_cd + ");'>" + json[i].pay_check_dt + " - "+json[i].pay_check_ca + "</a></td>";
+					tag += "<td class='center'>" + json[i].pay_gubun + "</td>";
+					tag += "<td class='center'>" + json[i].paydes + "</td>";
+					tag += "<td class='center'>" + json[i].paydate + "</td>";
+					tag += "<td class='center'>" + json[i].lastday + "</td>";
+					tag += "<td class='center'><a href='javascript:void(0);'  onclick='payCheckEmp_input(" + json[i].uid + ",\"" + json[i].pay_check_dt + "\"," + json[i].pay_check_ca + ",\"" + json[i].lastday + "\");'>금액 직접입력</a></td>";
+					tag += "<td class='center'>[<a href='index.php?controller=salary&action=registsalaryCodeRemarkPop&uid=" + json[i].uid + "'>전체계산</a>] [<a href='index.php?controller=salary&action=registsalaryCodeRemarkPop&uid=" + json[i].uid + "'>개인별계산</a>]</td>";
+					tag += "<td class='center'>[<a href='index.php?controller=salary&action=registsalaryCodeRemarkPop&uid=" + json[i].uid + "'>조회</a>] [<a href='index.php?controller=salary&action=registsalaryCodeRemarkPop&uid=" + json[i].uid + "'>명세서</a>] [<a href='index.php?controller=salary&action=registsalaryCodeRemarkPop&uid=" + json[i].uid + "'>확정</a>] [<a href='index.php?controller=salary&action=registsalaryCodeRemarkPop&uid=" + json[i].uid + "'>삭제</a>]</td>";
+					tag += "<td class='center'>" + json[i].totalpayamount + "</td>";
+					tag += "<td class='center'>" + json[i].payrate + "(" + json[i].payrateflag + ")</td>";
+					tag += "</tr>";
+				}
+			} else{
+					tag += "<tr>";
+					tag += "<td class='center' colspan='11'>등록된 급여 데이터가 없습니다.</td>";
+					tag += "</tr>";
+			}
+
+			$("#pay_check_list tbody").html(tag);
+		
+			var table = "erp_pay_check";
+			if(pay_gubun == 0) {
+				var where = $("#where").val();
+			} else {
+				var where = $("#where").val() + " and pay_gubun="  + pay_gubun;
+			}
+			var rpp = 10;
+			var adjacents = 4;
+			get_paging(table,where,rpp,adjacents);
+		}
+	);
+}
+
+function set_page(page){
+	$("#page").val(page);
+	get_account_code(page);
+}
+
+function get_paging(table,where,rpp,adjacents){
+        var data_string = "page=" + $("#page").val() + "&table=" + table + "&where=" + where + "&rpp=" + rpp + "&adjacents=" + adjacents;
+
+        $.ajax({
+                type : "post",
+                url : "_get_paging.php",
+                data : data_string,
+				success : function(str) {
+					$("#paging_area").html(str);
+				}
+        });
+}
+
+function delete_select(){
+	if(confirm("선택하신 거래처 정보를 삭제하시겠습니까?")) {
+		$(".chk").each(function(){
+			if($(this).is(":checked")) {
+				var new_uid = $("#chk_uids").val() + "," + $(this).val();
+				$("#chk_uids").val(new_uid);
+			}
+		});
+
+		var dataString = "mode=delete_data&table=erp_account_code&uids=" + $("#chk_uids").val();
+		$.ajax({
+			type : "post",
+			url : "ajax/ajax.php",
+			data : dataString,
+			async : false,
+			success : function(str){
+				if(str.trim() != "success") alert(str);
+				else location.reload();
+			}
+		});
+	} else {
+		location.reload();
+	}
+}
+
+function excel_regist(){
+	$("#excel_frm").submit();
+}
+
+function search(){
+	var txt = $("#search_txt").val();
+	$("#where").val(" where 1=1 and (name like '%" + txt + "%' or owner like '%" + txt + "%' or product like '%" + txt + "%')");
+	get_account_code(1);
+}
+
+function set_account(val) {
+	$("#page").val(1);
+	$("#account_type").val(val);
+	get_account_code(1);
+}
+</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="assets/js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!--[if lte IE 8]>
+		  <script src="assets/js/excanvas.min.js"></script>
+		<![endif]-->
+		<script src="assets/js/jquery-ui.custom.min.js"></script>
+		<script src="assets/js/chosen.jquery.min.js"></script>
+		<script src="assets/js/bootstrap-datepicker.min.js"></script>
+		<script src="assets/js/moment.min.js"></script>
+		<script src="assets/js/daterangepicker.min.js"></script>
+		<script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="assets/js/jquery.maskedinput.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="assets/js/ace-elements.min.js"></script>
+		<script src="assets/js/ace.min.js"></script>
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				
+			
+				$.mask.definitions['~']='[+-]';
+				$('.input-mask-date').mask('99/99/9999');
+				$('.input-mask-phone').mask('(999) 999-9999');
+				$('.input-mask-eyescript').mask('~9.99 ~9.99 999');
+				$(".input-mask-product").mask("a*-999-a999",{placeholder:" ",completed:function(){alert("You typed the following: "+this.val());}});
+			
+			
+			
+			
+				//datepicker plugin
+				//link
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				})
+				//show datepicker when clicking on the icon
+				.next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+			
+				//or change it into a date range picker
+				$('.input-daterange').datepicker({autoclose:true});
+			
+			
+				//to translate the daterange picker, please copy the "examples/daterange-fr.js" contents here before initialization
+				$('input[name=date-range-picker]').daterangepicker({
+					'applyClass' : 'btn-sm btn-success',
+					'cancelClass' : 'btn-sm btn-default',
+					locale: {
+						applyLabel: 'Apply',
+						cancelLabel: 'Cancel',
+					}
+				})
+				.prev().on(ace.click_event, function(){
+					$(this).next().focus();
+				});
+			
+			
+				$('#timepicker1').timepicker({
+					minuteStep: 1,
+					showSeconds: true,
+					showMeridian: false,
+					disableFocus: true,
+					icons: {
+						up: 'fa fa-chevron-up',
+						down: 'fa fa-chevron-down'
+					}
+				}).on('focus', function() {
+					$('#timepicker1').timepicker('showWidget');
+				}).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+				
+				
+			
+				
+				if(!ace.vars['old_ie']) $('#date-timepicker1').datetimepicker({
+				 //format: 'MM/DD/YYYY h:mm:ss A',//use this option to display seconds
+				 icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up: 'fa fa-chevron-up',
+					down: 'fa fa-chevron-down',
+					previous: 'fa fa-chevron-left',
+					next: 'fa fa-chevron-right',
+					today: 'fa fa-arrows ',
+					clear: 'fa fa-trash',
+					close: 'fa fa-times'
+				 }
+				}).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+
+			
+			
+				
+				
+				/////////
+				$('#modal-form input[type=file]').ace_file_input({
+					style:'well',
+					btn_choose:'Drop files here or click to choose',
+					btn_change:null,
+					no_icon:'ace-icon fa fa-cloud-upload',
+					droppable:true,
+					thumbnail:'large'
+				})
+				
+				//chosen plugin inside a modal will have a zero width because the select element is originally hidden
+				//and its width cannot be determined.
+				//so we set the width after modal is show
+				$('#modal-form').on('shown.bs.modal', function () {
+					if(!ace.vars['touch']) {
+						$(this).find('.chosen-container').each(function(){
+							$(this).find('a:first-child').css('width' , '210px');
+							$(this).find('.chosen-drop').css('width' , '210px');
+							$(this).find('.chosen-search input').css('width' , '200px');
+						});
+					}
+				})
+				/**
+				//or you can activate the chosen plugin after modal is shown
+				//this way select element becomes visible with dimensions and chosen works as expected
+				$('#modal-form').on('shown', function () {
+					$(this).find('.modal-chosen').chosen();
+				})
+				*/
+			
+				
+				
+				$(document).one('ajaxloadstart.page', function(e) {
+					autosize.destroy('textarea[class*=autosize]')
+					
+					$('.limiterBox,.autosizejs').remove();
+					$('.daterangepicker.dropdown-menu,.colorpicker.dropdown-menu,.bootstrap-datetimepicker-widget.dropdown-menu').remove();
+				});
+			
+			});
+		</script>
+
+
+<script type="text/javascript">
+<!--
+	  //$("#id-btn-dialog3").show(); 
+	  var url = "";
+
+	  $('#id-btn-dialog1').attr('src', url);
+	  $("#id-btn-dialog1").draggable({
+      handle: "#modal-header1"
+});
+	  $('#id-btn-dialog2').attr('src', url);
+	  $("#id-btn-dialog2").draggable({
+      handle: "#modal-header2"
+});
+	  $('#id-btn-dialog3').attr('src', url);
+	  $("#id-btn-dialog3").draggable({
+      handle: "#modal-header3"
+});
+//-->
+</script>
+<style type="text/css">
+.modal
+{
+    overflow: hidden;
+}
+.modal-dialog{
+    margin-right: 0;
+    margin-left: 0;
+}	
+</style>
+
+<script type="text/javascript">
+<!--
+	function payCheck_reg(cidx, acd)
+	{
+	$("#id-btn-dialog1").modal({
+		show: true,
+		clickClose: false,
+		closeText: '',
+		showClose: false,
+		hide:function() {
+			console.log('hide');
+		}
+	});
+	var url = "index.php?controller=salary&action=registPayCheckPop&idx="+cidx+"&pop=Y&aci_cd="+acd+"&dialogid=id-btn-dialog1";
+	//var url = "./views/salary/card/cardcompany_remark_list_pop.php?&gid="+cidx+"&pop=Y&ddd="+cidx;
+	$("#payCheck_reg_frame").attr("src", url);
+	}
+
+	function payCheck_modiy(gid, dt, ca)
+	{
+	$("#id-btn-dialog2").modal({
+		show: true,
+		clickClose: false,
+		closeText: '',
+		showClose: false,
+		hide:function() {
+			console.log('hide');
+		}
+	});
+
+	var url = "index.php?controller=salary&action=modifyPayCheckPop&gid="+gid+"&pop=Y&statement_dt="+dt+"&statement_ca="+ca+"&dialogid=id-btn-dialog2";
+	//var url = "./views/salary/card/cardcompany_remark_list_pop.php?&gid="+cidx+"&pop=Y&ddd="+cidx;
+	$("#payCheck_modify_frame").attr("src", url);
+	}
+
+	function payCheckEmp_input(uid, dt, ca, ld)
+	{
+	$("#id-btn-dialog3").modal({
+		show: true,
+		clickClose: false,
+		closeText: '',
+		showClose: false,
+		hide:function() {
+			console.log('hide');
+		}
+	});
+
+	var url = "index.php?controller=salary&action=listPayMemberPop&uid="+uid+"&pop=Y&pay_check_dt="+dt+"&pay_check_ca="+ca+"&lastday="+ld+"&dialogid=id-btn-dialog3";
+	//var url = "./views/salary/card/cardcompany_remark_list_pop.php?&gid="+cidx+"&pop=Y&ddd="+cidx;
+	$("#payCheckEmp_frame").attr("src", url);
+	}
+
+	function close_popup()
+	{	
+		$.modal.close();
+		$("#payCheck_reg_frame").attr("src", "about:blank");
+	}
+
+	function closePopup()
+	{
+		window.parent.closeModal('<?=$dialogid?>');
+		window.parent.location.reload();
+
+	}
+	window.closeModal = function(obj) {
+		$("#"+obj).modal( 'hide' );
+	}
+
+//-->
+</script>
