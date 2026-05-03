@@ -1,5 +1,6 @@
-connection.php
-connection2.php
+# DB 비밀 (저장소에 올리지 않음)
+config/db.secret.php
+.env.db
 
 # DB full dumps are huge; keep only compressed archives in git
 backups/*.sql

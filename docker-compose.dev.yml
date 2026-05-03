@@ -1,0 +1,27 @@
+# 개발용: PHP-FPM + 디스크 바인드 마운트 — 소스 저장 시 즉시 반영 (:rw)
+#
+# 실행: cp .env.db.example .env.db 후 수정, 그 다음
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# 호스트 nginx(deploy/nginx/ts-dair.conf) 가 127.0.0.1:19090 으로 FPM 에 붙음.
+# 마운트 대상 경로는 컨테이너·nginx root 와 동일해야 SCRIPT_FILENAME 이 일치함.
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: ln-mes-taesung-dev
+    ports:
+      - "127.0.0.1:19090:9000"
+    volumes:
+      - .:/lunar/ln_mes/ts/ln_mes_taesung:rw
+    env_file:
+      - .env.db
+    networks:
+      - mesdb
+
+networks:
+  mesdb:
+    external: true
+    name: docker-mariadb_default

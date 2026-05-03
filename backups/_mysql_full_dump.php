@@ -14,19 +14,11 @@ if ($argc < 2) {
 }
 $outfile = $argv[1];
 
-$src = file_get_contents(dirname(__DIR__) . '/connection.php');
-function defval($src, $name)
-{
-	if (!preg_match("/define\\(\\s*['\"]" . preg_quote($name, '/') . "['\"]\\s*,\\s*['\"]([^'\"]*)['\"]\\s*\\)/", $src, $m)) {
-		fwrite(STDERR, "Cannot parse define($name) in connection.php\n");
-		exit(1);
-	}
-	return $m[1];
-}
-$dbhost = defval($src, 'DB_HOST');
-$user = defval($src, 'DB_USER');
-$pass = defval($src, 'DB_PASSWORD');
-$dbname = defval($src, 'DB_NAME');
+require_once dirname(__DIR__) . '/config/bootstrap_db.php';
+$dbhost = DB_HOST;
+$user = DB_USER;
+$pass = DB_PASSWORD;
+$dbname = DB_NAME;
 
 $host = '127.0.0.1';
 $port = 3306;
