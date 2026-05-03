@@ -1,2 +1,5 @@
 connection.php
 connection2.php
+
+# DB full dumps are huge; keep only compressed archives in git
+backups/*.sql
