@@ -964,111 +964,136 @@ switch($mode) {
 
 	// 작업지시서 가져오기
 	case "getWork" :
-		$page = (is_numeric($page)) ? $page : 1; 
+		$page = (is_numeric($page)) ? $page : 1;
 
-		if ($_POST['uid'] >= 0 && $_POST['uid'] != ""){
-			$where=" where uid='".$_POST['uid']."'";
-		}else{
-			//$where="";
-			$where;
+		if (isset($_POST['uid']) && $_POST['uid'] !== '' && $_POST['uid'] !== null) {
+			$where = " where uid='".intval($_POST['uid'])."'";
+		} else {
+			$where = isset($where) ? $where : '';
 		}
-		
-		if($rpp == "all") $query = "select * from erp_work".$where." order by uid desc";
-		else $query = "select * from erp_work".$where." order by uid desc  limit ".($page-1)*$rpp.", ".$rpp;
-		//echo $query;
+
+		$re = array();
+		if ($rpp == "all") {
+			$query = "select * from erp_work".$where." order by uid desc";
+		} else {
+			$query = "select * from erp_work".$where." order by uid desc  limit ".($page - 1) * $rpp.", ".$rpp;
+		}
 		$result = mysql_query($query);
 
 		$i = 0;
 
-		while($t = @mysql_fetch_object($result)) {
-			$sql = "select * from erp_work_item where wid='".$t->uid."'";
-			//echo $sql;
+		while ($t = @mysql_fetch_object($result)) {
+			$sql = "select * from erp_work_item where wid='".$t->uid."' order by uid asc";
 			$result55 = mysql_query($sql);
-			
-			$k=0;
-			$item_nm = "";
+
+			$items = array();
+			while ($item = @mysql_fetch_object($result55)) {
+				$items[] = $item;
+			}
+			$n = count($items);
+			$item_nm = '';
+			$standard1_v = '';
+			$material_v = '';
+			$unit_v = '';
 			$remain_cnt = 0;
-			while($item = mysql_fetch_object($result55)){
-				if( $k != 0 ){
-					$item_nm = $item->item_nm."외".$k."개";
-				}else{
-					$item_nm = $item->item_nm;
+			$sum_make = 0;
+
+			for ($ix = 0; $ix < $n; $ix++) {
+				$it = $items[$ix];
+				if ($ix === 0) {
+					$item_nm = isset($it->item_nm) ? (string) $it->item_nm : '';
+					if (isset($it->standard1) && $it->standard1 !== null && (string) $it->standard1 !== '') {
+						$standard1_v = (string) $it->standard1;
+					} elseif (isset($it->standard) && $it->standard !== null && (string) $it->standard !== '') {
+						$standard1_v = (string) $it->standard;
+					}
+					$material_v = isset($it->material) ? (string) $it->material : '';
+					$unit_v = isset($it->unit) ? (string) $it->unit : '';
 				}
-				$remain_cnt = $remain_cnt + $item->order_cnt;
-				$k++;
+				$oc = 0;
+				if (isset($it->order_cnt) && $it->order_cnt !== null && $it->order_cnt !== '') {
+					$oc = (float) $it->order_cnt;
+				} elseif (isset($it->work_cnt) && $it->work_cnt !== null && $it->work_cnt !== '') {
+					$oc = (float) $it->work_cnt;
+				}
+				$remain_cnt += $oc;
+				if (isset($it->make_cnt) && $it->make_cnt !== null && $it->make_cnt !== '') {
+					$sum_make += (float) $it->make_cnt;
+				}
+			}
+			if ($n > 1 && $item_nm !== '') {
+				$item_nm .= ' 외 '.($n - 1).'건';
 			}
 
-			// 해당 원자재가 출고가 되지 않은 작업지시서는 출력을 시키지 않는다
-			$sql = "select status from erp_release where work_cd='".$t->work_cd."' and object_item_cd='".$t->item_cd."' and object_item_standard1='".$t->standard1."' ";
-			//echo $sql;
-			$release = mysql_query($sql) or die (mysql_error());
-			
-			$arr = array();
-			
-			if($_SESSION['auto_work'] != "y") {
-				// 반복처리를 해서 모두다 complete 가 아니면 작업지시서를 내보내지 않는다
-				while($r = mysql_fetch_object($release)) {
-					if($r->status != "complete") array_push($arr,"false");
-				}
-				
-				//var_dump($arr);
+			$eff_start = isset($t->start_dt) && $t->start_dt !== null && $t->start_dt !== '' ? $t->start_dt : (isset($t->work_start_dt) ? $t->work_start_dt : '');
+			$eff_end = isset($t->end_dt) && $t->end_dt !== null && $t->end_dt !== '' ? $t->end_dt : (isset($t->work_end_dt) ? $t->work_end_dt : '');
+			$ds = ($eff_start !== null && $eff_start !== '') ? substr((string) $eff_start, 0, 10) : '';
+			$de = ($eff_end !== null && $eff_end !== '') ? substr((string) $eff_end, 0, 10) : '';
+			if ($ds === false) {
+				$ds = '';
+			}
+			if ($de === false) {
+				$de = '';
+			}
+			$ddl_raw = isset($t->deadline_dt) ? $t->deadline_dt : '';
+			$ddl = ($ddl_raw !== null && $ddl_raw !== '' && strpos((string) $ddl_raw, '0000-00-00') !== 0) ? substr((string) $ddl_raw, 0, 10) : '';
 
-				if(!in_array("false",$arr)) {
-					$re[$i]['uid'] = $t->uid;
-					$re[$i]['work_cd'] = $t->work_cd;
-					$re[$i]['start_dt'] = substr($t->start_dt,0,10);
-					$re[$i]['end_dt'] = substr($t->end_dt,0,10);
-					//$re[$i]['process'] = getProcessName($item->process);
-					//$re[$i]['machine'] = getMachineNm($item->machine);
-					//$re[$i]['item_cd'] = $item->item_cd;
-					$re[$i]['item_nm'] = $item_nm;
-					//$re[$i]['standard1'] = $item->standard1;
-					//$re[$i]['material'] = $item->material;
-					//$re[$i]['unit'] = $item->unit;
-					$re[$i]['account_cd'] = $t->account_cd;
-					$re[$i]['account_nm'] = $t->account_nm;			
-					$re[$i]['order_cnt'] = $remain_cnt;
-					$re[$i]['project_cd'] = $t->project_cd;
-					$re[$i]['project_nm'] = $t->project_nm;
-					$re[$i]['warehouse_cd'] = $t->warehouse_cd;
-					$re[$i]['warehouse_nm'] = $t->warehouse_nm;
-					$re[$i]['deadline_dt'] = $t->deadline_dt;
-					//$re[$i]['remain_cnt'] = number_format($item->remain_cnt);
-					//$re[$i]['make_cnt'] = number_format($item->make_cnt);
-					$re[$i]['manager'] = $t->manager;
-					$re[$i]['state'] = $t->state;
-					$re[$i]['emp_id'] = $t->emp_id;
-					$re[$i]['create_dt'] = substr($t->create_dt,0,10);
+			// 해당 원자재가 출고가 되지 않은 작업지시서는 출력을 시키지 않는다
+			$arr = array();
+			$wcd = isset($t->work_cd) ? $t->work_cd : '';
+			$ic = isset($t->item_cd) ? $t->item_cd : '';
+			$st1 = '';
+			if (isset($t->standard1) && $t->standard1 !== null && $t->standard1 !== '') {
+				$st1 = $t->standard1;
+			} elseif (isset($t->standard) && $t->standard !== null && $t->standard !== '') {
+				$st1 = $t->standard;
+			}
+			$sql = "select status from erp_release where work_cd='".addslashes($wcd)."' and object_item_cd='".addslashes($ic)."' and object_item_standard1='".addslashes($st1)."' ";
+			$release = @mysql_query($sql);
+
+			if ($_SESSION['auto_work'] != "y") {
+				while ($r = @mysql_fetch_object($release)) {
+					if ($r->status != "complete") {
+						array_push($arr, "false");
+					}
+				}
+			}
+
+			$row = array(
+				'uid' => isset($t->uid) ? $t->uid : '',
+				'work_cd' => $wcd,
+				'start_dt' => $ds,
+				'end_dt' => $de,
+				'plan_period' => ($ds !== '' && $de !== '') ? ($ds.' ~ '.$de) : ($ds !== '' ? $ds : ''),
+				'item_nm' => $item_nm,
+				'standard1' => $standard1_v,
+				'material' => $material_v,
+				'unit' => $unit_v,
+				'account_cd' => isset($t->account_cd) ? $t->account_cd : '',
+				'account_nm' => isset($t->account_nm) ? $t->account_nm : '',
+				'order_cnt' => $remain_cnt,
+				'make_cnt' => $sum_make,
+				'project_cd' => isset($t->project_cd) ? $t->project_cd : '',
+				'project_nm' => isset($t->project_nm) ? $t->project_nm : '',
+				'warehouse_cd' => isset($t->warehouse_cd) ? $t->warehouse_cd : '',
+				'warehouse_nm' => isset($t->warehouse_nm) ? $t->warehouse_nm : '',
+				'deadline_dt' => $ddl,
+				'manager' => isset($t->manager) ? $t->manager : '',
+				'state' => isset($t->state) ? $t->state : '',
+				'emp_id' => isset($t->emp_id) ? $t->emp_id : '',
+				'create_dt' => (isset($t->create_dt) && $t->create_dt !== null && $t->create_dt !== '') ? substr((string) $t->create_dt, 0, 10) : '',
+			);
+
+			if ($_SESSION['auto_work'] != "y") {
+				if (!in_array("false", $arr)) {
+					$re[$i] = $row;
 					$i++;
 				}
 			} else {
-					$re[$i]['uid'] = $t->uid;
-					$re[$i]['work_cd'] = $t->work_cd;
-					$re[$i]['start_dt'] = substr($t->start_dt,0,10);
-					$re[$i]['end_dt'] = substr($t->end_dt,0,10);
-					//$re[$i]['process'] = getProcessName($item->process);
-					//$re[$i]['machine'] = getMachineNm($item->machine);
-					//$re[$i]['item_cd'] = $item->item_cd;
-					$re[$i]['item_nm'] =  $item_nm;
-					//$re[$i]['standard1'] = $item->standard1;
-					//$re[$i]['material'] = $item->material;
-					//$re[$i]['unit'] = $item->unit;
-					$re[$i]['account_cd'] = $t->account_cd;
-					$re[$i]['account_nm'] = $t->account_nm;			
-					$re[$i]['order_cnt'] = $remain_cnt;
-					$re[$i]['project_cd'] = $t->project_cd;
-					$re[$i]['project_nm'] = $t->project_nm;
-					$re[$i]['warehouse_cd'] = $t->warehouse_cd;
-					$re[$i]['warehouse_nm'] = $t->warehouse_nm;
-					$re[$i]['deadline_dt'] = $t->deadline_dt;
-					//$re[$i]['remain_cnt'] = number_format($item->remain_cnt);
-					//$re[$i]['make_cnt'] = number_format($item->make_cnt);
-					$re[$i]['manager'] = $t->manager;
-					$re[$i]['state'] = $t->state;
-					$re[$i]['emp_id'] = $t->emp_id;
-					$re[$i]['create_dt'] = substr($t->create_dt,0,10);
+				$re[$i] = $row;
 				$i++;
 			}
+
 
 			unset($arr);
 		}

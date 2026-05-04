@@ -1,3 +1,12 @@
+/** JSON/API row helper: avoid showing the string "undefined" for missing or null fields */
+function jv(obj, key) {
+	if (obj == null || typeof obj !== 'object') return '';
+	var v = obj[key];
+	if (v === undefined || v === null) return '';
+	if (typeof v === 'boolean' && v === false) return '';
+	return v;
+}
+
 function check(formName){
 	var valid = true;
 	var form = $('#' + formName);

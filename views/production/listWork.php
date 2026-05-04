@@ -210,22 +210,22 @@ function getWork(page){
 					<? if($_SESSION['login_level'] >= 99) { ?>
 					tag += "<td class='center'>";
 					tag += "<label class='pos-rel'>";
-					tag += "<input type='checkbox' class='ace flat chk' value='" + json[i].uid + "' />";
+					tag += "<input type='checkbox' class='ace flat chk' value='" + jv(json[i], 'uid') + "' />";
 					tag += "<span class='lbl'></span>";
 					tag += "</label>";
 					tag += "</td>";
 					<?}?>
-					tag += "<td><a href='index.php?controller=production&action=modifyPageWork&uid=" + json[i].uid + "'>" + json[i].work_cd + "</a></td>";
-					tag += "<td>" + json[i].start_dt + " ~ " + json[i].end_dt + "</td>";
-					tag += "<td>" + json[i].deadline_dt + "</td>";
-					tag += "<td>" + json[i].item_nm + "</td>";
-					tag += "<td>" + json[i].standard1 + "</td>";
-					tag += "<td>" + json[i].material + "</td>";
-					tag += "<td>" + json[i].unit + "</td>";
-					tag += "<td>" + json[i].order_cnt + "</td>";
-					tag += "<td class='text-right'>" + json[i].make_cnt + "</td>";
-					tag += "<td class='text-right'>" + json[i].state + "</td>";
-					tag += "<td><a href='#' onclick=\"wopen('" + json[i].uid + "')\">인쇄</a></td>";
+					tag += "<td><a href='index.php?controller=production&action=modifyPageWork&uid=" + jv(json[i], 'uid') + "'>" + jv(json[i], 'work_cd') + "</a></td>";
+					tag += "<td>" + jv(json[i], 'account_nm') + "</td>";
+					tag += "<td>" + jv(json[i], 'deadline_dt') + "</td>";
+					tag += "<td>" + jv(json[i], 'item_nm') + "</td>";
+					tag += "<td>" + jv(json[i], 'standard1') + "</td>";
+					tag += "<td>" + jv(json[i], 'material') + "</td>";
+					tag += "<td>" + jv(json[i], 'unit') + "</td>";
+					tag += "<td class='text-right'>" + jv(json[i], 'order_cnt') + "</td>";
+					tag += "<td class='text-right'>" + jv(json[i], 'make_cnt') + "</td>";
+					tag += "<td class='text-right'>" + jv(json[i], 'state') + "</td>";
+					tag += "<td><a href='#' onclick=\"wopen('" + jv(json[i], 'uid') + "')\">인쇄</a></td>";
 					//if(json[i].remain_cnt == 0) {
 					//	tag += "<td></td>";
 					//} else if(json[i].remain_cnt > 0 && json[i].make_cnt > 0) {
